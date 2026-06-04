@@ -53,14 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ── 상품소개 카드 팝 애니메이션 ── */
 function popProdCards() {
-  const cards = document.querySelectorAll('.prod-card');
-  // 초기화
+  const cards = document.querySelectorAll('#page-services .pcard');
   cards.forEach(c => c.classList.remove('popped', 'settled'));
-
   cards.forEach((c, i) => {
     setTimeout(() => {
       c.classList.add('popped');
-      // 애니메이션 끝나면 settled로 교체 → hover 정상 동작
       c.addEventListener('animationend', () => {
         c.classList.remove('popped');
         c.classList.add('settled');

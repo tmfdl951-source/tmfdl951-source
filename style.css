@@ -564,12 +564,206 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .consult-btn { background: var(--green); }
 
 /* ═══════════════════════════════════════
+   상품소개 카드 (pcard)
+═══════════════════════════════════════ */
+.pcard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.pcard {
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--r-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.7) translateY(40px);
+  transition: box-shadow 0.28s, border-color 0.28s;
+}
+
+.pcard.popped { animation: prodPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+.pcard.settled {
+  opacity: 1;
+  transform: scale(1);
+  animation: none;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.pcard.settled:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 40px rgba(45,122,60,0.12);
+  border-color: var(--green);
+}
+
+.pcard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 28px 28px 0;
+  margin-bottom: 14px;
+}
+
+.pcard-num { font-size: 12px; font-weight: 700; color: var(--gray-200); letter-spacing: 2px; }
+.pcard-icon { font-size: 36px; line-height: 1; }
+
+.pcard-name {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--gray-900);
+  line-height: 1.3;
+  padding: 0 28px;
+  margin-bottom: 10px;
+}
+
+.pcard-tagline {
+  font-size: 13px;
+  color: var(--gray-500);
+  line-height: 1.75;
+  padding: 0 28px;
+  margin-bottom: 20px;
+}
+
+.pcard-body {
+  position: relative;
+  flex: 1;
+  padding: 0 28px;
+  min-height: 120px;
+}
+
+.pcard-points { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.pcard-points li { font-size: 13px; color: var(--gray-700); padding-left: 18px; position: relative; line-height: 1.55; }
+.pcard-points li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; font-size: 12px; }
+
+/* 호버 오버레이 */
+.pcard-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #1a5c2a 0%, #2d7a3c 100%);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.pcard.settled:hover .pcard-overlay {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.pov-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; }
+
+.pov-targets { list-style: none; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+.pov-targets li { font-size: 13px; color: rgba(255,255,255,0.9); padding-left: 16px; position: relative; line-height: 1.5; }
+.pov-targets li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-size: 11px; }
+
+.btn-pov-detail {
+  display: block;
+  text-align: center;
+  padding: 9px 14px;
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-pov-detail:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.65); }
+
+/* 카드 하단 */
+.pcard-footer { display: flex; flex-direction: column; gap: 8px; padding: 20px 28px 28px; }
+
+.btn-pf-consult {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green);
+  border: 2px solid var(--green);
+  transition: all 0.2s;
+}
+.btn-pf-consult:hover { background: var(--green); color: var(--white); }
+
+.btn-pf-detail {
+  display: none;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  transition: all 0.2s;
+}
+.btn-pf-detail:hover { color: var(--gray-900); background: var(--gray-200); }
+
+/* ═══════════════════════════════════════
+   상품 상세페이지
+═══════════════════════════════════════ */
+#page-place-ranking,
+#page-blog-review,
+#page-place-care { background: var(--white); }
+
+.dp-wrap { max-width: 860px; }
+
+.dp-back {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-500);
+  margin-bottom: 36px;
+  transition: color 0.2s;
+}
+.dp-back:hover { color: var(--green); }
+
+.dp-hero { padding: 40px 0 36px; border-bottom: 1px solid var(--gray-200); margin-bottom: 52px; }
+.dp-hero .page-label { margin-bottom: 10px; }
+.dp-hero h2 { margin-bottom: 14px; }
+.dp-copy { font-size: 18px; color: var(--gray-500); line-height: 1.8; }
+
+.dp-section { margin-bottom: 52px; }
+.dp-section h3 { font-size: 20px; font-weight: 900; color: var(--gray-900); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--green-light); }
+.dp-text { font-size: 15px; color: var(--gray-700); line-height: 2; }
+
+.dp-recommend { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.rec-item { display: flex; align-items: flex-start; gap: 12px; background: var(--gray-100); border-radius: var(--r); padding: 18px 20px; }
+.rec-item > span { font-size: 22px; flex-shrink: 0; }
+.rec-item > p { font-size: 14px; color: var(--gray-700); line-height: 1.6; }
+
+.dp-steps { display: flex; align-items: flex-start; flex-wrap: wrap; }
+.dp-step { flex: 1; min-width: 140px; background: var(--gray-100); border-radius: var(--r); padding: 24px 18px; text-align: center; }
+.dps-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: var(--green); color: white; font-size: 12px; font-weight: 900; border-radius: 50%; margin-bottom: 12px; }
+.dp-step h4 { font-size: 14px; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+.dp-step p { font-size: 12px; color: var(--gray-500); line-height: 1.6; }
+.dps-arrow { display: flex; align-items: center; padding: 0 6px; padding-top: 28px; font-size: 18px; color: var(--green); flex-shrink: 0; }
+
+.dp-ref-btn { display: inline-block; margin-top: 16px; }
+
+.dp-cta { background: var(--dark2); border-radius: var(--r-lg); padding: 48px 40px; text-align: center; }
+.dp-cta h3 { font-size: 24px; font-weight: 900; color: var(--white); margin-bottom: 10px; }
+.dp-cta p { font-size: 15px; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
+
+/* ═══════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════ */
 @media (max-width: 1024px) {
   .services-grid { grid-template-columns: repeat(2, 1fr); }
   .lineup-grid { grid-template-columns: repeat(2, 1fr); }
   .prod-grid { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+  .pcard-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
   .footer-inner { grid-template-columns: 1fr 1fr; }
 }
 
@@ -598,6 +792,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 @media (max-width: 768px) {
   .process-steps { flex-direction: column; }
   .process-arrow { padding: 8px 0; transform: rotate(90deg); align-self: center; }
+  /* 모바일: 오버레이 숨기고 하단 버튼 표시 */
+  .pcard-grid { max-width: 100%; }
+  .pcard-overlay { display: none; }
+  .btn-pf-detail { display: block; }
+  /* 모바일: 상세페이지 */
+  .dp-recommend { grid-template-columns: 1fr; }
+  .dp-steps { flex-direction: column; }
+  .dps-arrow { transform: rotate(90deg); align-self: center; padding: 6px 0; }
+  .dp-wrap { max-width: 100%; }
+  .dp-hero { padding: 28px 0 24px; }
+  .dp-cta { padding: 32px 24px; }
 }
 
 @media (max-width: 480px) {
