@@ -175,7 +175,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  align-items: start;
+  align-items: stretch;
 }
 
 /* 초기 숨김 */
@@ -190,6 +190,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   opacity: 0;
   transform: scale(0.7) translateY(40px);
   transition: box-shadow 0.28s, border-color 0.28s;
+  cursor: pointer;
 }
 /* 팝 등장 */
 .prod-card.popped {
@@ -213,9 +214,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   box-shadow: 0 14px 40px rgba(45,122,60,0.14);
   border-color: var(--green);
 }
-.prod-featured {
-  border-color: var(--green);
-  background: linear-gradient(160deg, #f0fdf4 0%, #fff 60%);
+.prod-card.settled.card-open:hover {
+  transform: scale(1);
 }
 
 .prod-badge {
@@ -237,7 +237,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   letter-spacing: 2px;
   margin-bottom: 16px;
 }
-.prod-featured .prod-num { color: var(--green-light); }
 
 .prod-icon {
   font-size: 44px;
@@ -260,23 +259,71 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--gray-600, #4b5563);
   line-height: 1.7;
   margin-bottom: 16px;
+  overflow: hidden;
+  max-height: 200px;
+  opacity: 1;
+  transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.35s ease;
 }
 
-/* 상세 설명 (평소 숨김 → 호버 시 등장) */
+/* 상세 설명 (클릭 시 표시) */
 .prod-detail {
-  font-size: 13px;
-  color: var(--gray-500);
-  line-height: 1.85;
+  font-size: 14px;
+  color: var(--gray-600, #4b5563);
+  line-height: 1.9;
   max-height: 0;
   overflow: hidden;
   opacity: 0;
-  margin-bottom: 0;
-  transition: max-height 0.4s ease, opacity 0.35s ease, margin-bottom 0.35s ease;
+  flex: 0;
+  transition: max-height 0.45s ease, opacity 0.35s ease 0.1s, flex 0.4s ease;
 }
-.prod-card.settled:hover .prod-detail {
+.prod-detail.open {
+  max-height: 600px;
+  opacity: 1;
+  flex: 1;
+}
+/* 카드 열림: 태그라인·체크리스트 숨김 */
+.prod-card.card-open .prod-tagline {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+}
+.prod-card.card-open .prod-list {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+  flex: 0;
+}
+.prod-card.card-open {
+  border-color: var(--green);
+  box-shadow: 0 12px 40px rgba(45,122,60,0.18);
+}
+
+/* 체크리스트 */
+.prod-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex: 1;
+  overflow: hidden;
   max-height: 300px;
   opacity: 1;
-  margin-bottom: 20px;
+  transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.35s ease;
+}
+.prod-list li {
+  font-size: 14px;
+  color: var(--gray-700);
+  padding-left: 22px;
+  position: relative;
+  line-height: 1.6;
+}
+.prod-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
 }
 
 .prod-cta {
@@ -290,12 +337,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border: 2px solid var(--green);
   transition: all 0.22s;
 }
-.prod-cta:hover, .prod-featured .prod-cta {
+.prod-cta:hover {
   background: var(--green);
   color: var(--white);
-}
-.prod-featured .prod-cta:hover {
-  background: var(--green-dark);
 }
 
 /* 상품 라인업 */

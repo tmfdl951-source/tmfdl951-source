@@ -124,6 +124,21 @@ document.addEventListener('click', e => {
   }
 });
 
+/* ── 상품 카드 클릭 시 상세설명 토글 ── */
+document.addEventListener('click', e => {
+  const card = e.target.closest('#page-services .prod-card');
+  if (!card) return;
+  const detail = card.querySelector('.prod-detail');
+  if (!detail) return;
+  const isOpen = detail.classList.contains('open');
+  document.querySelectorAll('#page-services .prod-detail').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('#page-services .prod-card').forEach(c => c.classList.remove('card-open'));
+  if (!isOpen) {
+    detail.classList.add('open');
+    card.classList.add('card-open');
+  }
+});
+
 /* ── 문의 폼 ── */
 document.getElementById('contactForm').addEventListener('submit', e => {
   e.preventDefault();
