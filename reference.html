@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>레퍼런스 | 동행이음</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #2d7a3c;
+      --primary-light: #d1fae5;
+      --dark: #0f172a;
+      --gray-700: #374151;
+      --gray-400: #9ca3af;
+      --gray-200: #e5e7eb;
+      --gray-100: #f3f4f6;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-700);
+      min-height: 100vh;
+    }
+
+    /* ── 헤더 ── */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .logo-img {
+      height: 38px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .back-btn {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-400);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.2s;
+    }
+    .back-btn:hover { color: var(--primary); }
+
+    /* ── 페이지 타이틀 ── */
+    .page-title-wrap {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 40px 24px 0;
+      text-align: center;
+    }
+    .page-title-wrap p {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .page-title-wrap h1 {
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 900;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .page-title-wrap .subtitle {
+      font-size: 15px;
+      color: var(--gray-400);
+      margin-bottom: 36px;
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+
+    /* ── 카테고리 탭 ── */
+    .tab-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      border-top: 1px solid var(--gray-200);
+    }
+    .tab-btn {
+      padding: 14px 36px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-400);
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px 3px 0 0;
+      transform: scaleX(0);
+      transition: transform 0.25s ease;
+    }
+    .tab-btn:hover { color: var(--primary); }
+    .tab-btn.active {
+      color: var(--primary);
+    }
+    .tab-btn.active::after {
+      transform: scaleX(1);
+    }
+
+    /* ── 컨텐츠 래퍼 ── */
+    .content-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+      overflow: visible;
+    }
+
+    /* ── 탭 패널 ── */
+    .tab-panel { display: none; overflow: visible; }
+    .tab-panel.active { display: block; overflow: visible; }
+
+    /* ── 카운트 표시 ── */
+    .panel-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .panel-meta .count {
+      font-size: 14px;
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+    .panel-meta .count strong {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* ── 빈 상태 ── */
+    .empty-state {
+      background: var(--white);
+      border-radius: 16px;
+      border: 2px dashed var(--gray-200);
+      padding: 80px 40px;
+      text-align: center;
+    }
+    .empty-state .empty-icon { font-size: 52px; margin-bottom: 20px; opacity: 0.4; }
+    .empty-state p { font-size: 16px; color: var(--gray-400); font-weight: 500; }
+    .empty-state small { font-size: 13px; color: var(--gray-400); display: block; margin-top: 6px; }
+
+    /* ── 블록 리스트 ── */
+    .block-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: visible;
+    }
+
+    .ref-block {
+      width: 100%;
+      border-radius: 12px;
+      overflow: visible;          /* scale 잘림 방지 */
+      border: 1px solid var(--gray-200);
+      background: var(--white);
+      /* 초기: 숨김 */
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .ref-block img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;        /* overflow 대신 img에 직접 */
+    }
+    /* JS로 추가되는 클래스 */
+    .ref-block.show {
+      animation: blockIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes blockIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── 레퍼런스 카드 그리드 ── */
+    .ref-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .ref-card {
+      background: var(--white);
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+      cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .ref-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 36px rgba(0,0,0,0.1);
+    }
+
+    /* 이미지 영역 */
+    .ref-img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ref-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+    .ref-card:hover .ref-img img { transform: scale(1.04); }
+
+    /* 카드 정보 */
+    .ref-info {
+      padding: 16px 18px 18px;
+    }
+    .ref-category {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .ref-info h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+    .ref-info p {
+      font-size: 13px;
+      color: var(--gray-400);
+    }
+
+    /* ── 블록 클릭 확대 ── */
+    .ref-block {
+      cursor: zoom-in;
+      position: relative;
+      z-index: 1;
+      transform-origin: center top;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.35s ease;
+    }
+    .ref-block.expanded {
+      transform: scale(3);
+      z-index: 100;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.22);
+      cursor: zoom-out;
+    }
+
+    @media (max-width: 768px) {
+      .ref-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    }
+    @media (max-width: 480px) {
+      .ref-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 헤더 -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <img src="logo.png" alt="동행이음" class="logo-img" />
+      </a>
+      <a href="index.html" class="back-btn">← 메인으로</a>
+    </div>
+  </header>
+
+  <!-- 페이지 타이틀 + 탭 -->
+  <div class="page-title-wrap">
+    <p>REFERENCE</p>
+    <h1>레퍼런스</h1>
+    <p class="subtitle">실제 진행한 마케팅 사례를 확인해보세요</p>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" data-tab="restaurant" role="tab" aria-selected="true">맛집</button>
+      <button class="tab-btn" data-tab="medical" role="tab" aria-selected="false">병·의원</button>
+      <button class="tab-btn" data-tab="general" role="tab" aria-selected="false">일반(기타)</button>
+    </div>
+  </div>
+
+  <!-- 콘텐츠 -->
+  <div class="content-wrap">
+
+    <!-- 맛집 -->
+    <div class="tab-panel active" id="panel-restaurant" role="tabpanel">
+      <div class="block-list" id="blockList">
+        <div class="ref-block"><img src="ref-restaurant-01.png" alt="맛집 레퍼런스 1" /></div>
+        <div class="ref-block"><img src="ref-restaurant-02.png" alt="맛집 레퍼런스 2" /></div>
+        <div class="ref-block"><img src="ref-restaurant-03.png" alt="맛집 레퍼런스 3" /></div>
+        <div class="ref-block"><img src="ref-restaurant-04.png" alt="이자카야 레퍼런스" /></div>
+        <div class="ref-block"><img src="ref-restaurant-05.png" alt="카페 레퍼런스" /></div>
+        <div class="ref-block"><img src="ref-restaurant-06.png" alt="맛집 레퍼런스 6" /></div>
+      </div>
+    </div>
+
+    <!-- 병·의원 -->
+    <div class="tab-panel" id="panel-medical" role="tabpanel">
+      <div class="block-list" id="blockListMedical">
+        <div class="ref-block"><img src="ref-medical-01.png" alt="병·의원 레퍼런스 1" /></div>
+        <div class="ref-block"><img src="ref-medical-02.png" alt="병·의원 레퍼런스 2" /></div>
+        <div class="ref-block"><img src="ref-medical-03.png" alt="병·의원 레퍼런스 3" /></div>
+        <div class="ref-block"><img src="ref-medical-04.png" alt="병·의원 레퍼런스 4" /></div>
+        <div class="ref-block"><img src="ref-medical-05.png" alt="병·의원 레퍼런스 5" /></div>
+        <div class="ref-block"><img src="ref-medical-06.png" alt="병·의원 레퍼런스 6" /></div>
+        <div class="ref-block"><img src="ref-medical-07.png" alt="병·의원 레퍼런스 7" /></div>
+        <div class="ref-block"><img src="ref-medical-08.png" alt="병·의원 레퍼런스 8" /></div>
+        <div class="ref-block"><img src="ref-medical-09.png" alt="병·의원 레퍼런스 9" /></div>
+        <div class="ref-block"><img src="ref-medical-10.png" alt="병·의원 레퍼런스 10" /></div>
+      </div>
+    </div>
+
+    <!-- 일반(기타) -->
+    <div class="tab-panel" id="panel-general" role="tabpanel">
+      <div class="block-list" id="blockListGeneral">
+        <div class="ref-block"><img src="ref-general-01.png" alt="일반 레퍼런스 1" /></div>
+        <div class="ref-block"><img src="ref-general-02.png" alt="일반 레퍼런스 2" /></div>
+        <div class="ref-block"><img src="ref-general-03.png" alt="일반 레퍼런스 3" /></div>
+        <div class="ref-block"><img src="ref-general-04.png" alt="일반 레퍼런스 4" /></div>
+        <div class="ref-block"><img src="ref-general-05.png" alt="일반 레퍼런스 5" /></div>
+        <div class="ref-block"><img src="ref-general-06.png" alt="일반 레퍼런스 6" /></div>
+        <div class="ref-block"><img src="ref-general-07.png" alt="일반 레퍼런스 7" /></div>
+        <div class="ref-block"><img src="ref-general-08.png" alt="일반 레퍼런스 8" /></div>
+        <div class="ref-block"><img src="ref-general-09.png" alt="일반 레퍼런스 9" /></div>
+        <div class="ref-block"><img src="ref-general-10.png" alt="일반 레퍼런스 10" /></div>
+        <div class="ref-block"><img src="ref-general-11.png" alt="일반 레퍼런스 11" /></div>
+        <div class="ref-block"><img src="ref-general-12.png" alt="일반 레퍼런스 12" /></div>
+        <div class="ref-block"><img src="ref-general-13.png" alt="일반 레퍼런스 13" /></div>
+        <div class="ref-block"><img src="ref-general-14.png" alt="일반 레퍼런스 14" /></div>
+        <div class="ref-block"><img src="ref-general-15.png" alt="일반 레퍼런스 15" /></div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <script>
+    /* ── 블록 순차 등장 애니메이션 ── */
+    const BLOCK_DELAY = 150;
+
+    function runBlockAnim(listId) {
+      const blocks = document.querySelectorAll('#' + listId + ' .ref-block');
+      blocks.forEach(b => b.classList.remove('show'));
+      blocks.forEach((b, i) => setTimeout(() => b.classList.add('show'), i * BLOCK_DELAY));
+    }
+
+    /* ── 블록 클릭 확대 (모든 block-list 공통) ── */
+    document.addEventListener('click', e => {
+      const block = e.target.closest('.ref-block');
+      if (block) {
+        const isExpanded = block.classList.contains('expanded');
+        document.querySelectorAll('.ref-block').forEach(b => b.classList.remove('expanded'));
+        if (!isExpanded) block.classList.add('expanded');
+      } else {
+        // 블록 바깥 클릭 시 모두 축소
+        document.querySelectorAll('.ref-block').forEach(b => b.classList.remove('expanded'));
+      }
+    });
+
+    /* ── 탭 전환 ── */
+    const tabs   = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.tab-panel');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+        panels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected','true');
+        document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+        if (tab.dataset.tab === 'restaurant') runBlockAnim('blockList');
+        if (tab.dataset.tab === 'medical')    runBlockAnim('blockListMedical');
+        if (tab.dataset.tab === 'general')    runBlockAnim('blockListGeneral');
+      });
+    });
+
+    window.addEventListener('load', () => runBlockAnim('blockList'));
+  </script>
+</body>
+</html>
