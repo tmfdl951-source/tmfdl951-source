@@ -93,25 +93,40 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .tl-main { margin-bottom: 4px; }
 .tl-accent { margin-bottom: 28px; }
-.reveal-text { display: inline-block; font-size: clamp(52px, 8.5vw, 96px); font-weight: 900; color: var(--white); line-height: 1.08; letter-spacing: -2px; clip-path: inset(0 100% 0 0); transition: clip-path 0.65s cubic-bezier(0.77,0,0.18,1); }
-.tl-main.go .reveal-text { clip-path: inset(0 0% 0 0); }
-.tl-accent .reveal-text { color: var(--gold); }
-.tl-accent.go .reveal-text { clip-path: inset(0 0% 0 0); }
+/* 메인 카피 — 아래에서 위로 페이드인 */
+.reveal-text {
+  display: inline-block;
+  font-size: clamp(52px, 8.5vw, 96px);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.08;
+  letter-spacing: -2px;
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tl-main.go .reveal-text { opacity: 1; transform: translateY(0); }
+
+/* 강조 카피 — 그린→골드→그린 그라데이션 흐름 */
 .tl-accent .reveal-text {
-  z-index: 1;
+  background: linear-gradient(90deg, #4aab5e 0%, var(--gold) 50%, #4aab5e 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-.tl-accent .reveal-text::after {
-  content: '';
-  position: absolute;
-  inset: 0 -10px;
-  background: rgba(255, 255, 255, 0.13);
-  border-radius: 6px;
-  z-index: -1;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.5s cubic-bezier(0.77, 0, 0.18, 1) 0.65s;
+.tl-accent.go .reveal-text {
+  opacity: 1;
+  transform: translateY(0);
+  animation: gradientShift 5s ease infinite 0.5s;
 }
-.tl-accent.go .reveal-text::after { transform: scaleX(1); }
+.tl-accent .reveal-text::after { display: none; }
+
+@keyframes gradientShift {
+  0%   { background-position: 0% center; }
+  50%  { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
 
 .tl-sub { margin-bottom: 36px; }
 .reveal-fade { display: inline-block; font-size: clamp(15px, 1.8vw, 18px); color: rgba(255,255,255,0.5); font-weight: 400; opacity: 0; transform: translateY(12px); transition: opacity 0.7s ease, transform 0.7s ease; }
@@ -580,6 +595,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
   opacity: 0;
   transform: scale(0.7) translateY(40px);
   transition: box-shadow 0.28s, border-color 0.28s;
@@ -639,20 +655,21 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .pcard-points li { font-size: 13px; color: var(--gray-700); padding-left: 18px; position: relative; line-height: 1.55; }
 .pcard-points li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; font-size: 12px; }
 
-/* 호버 오버레이 */
+/* 호버 오버레이 — .pcard 기준으로 전체 덮음 */
 .pcard-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(160deg, #1a5c2a 0%, #2d7a3c 100%);
-  border-radius: 10px;
-  padding: 20px;
+  padding: 36px 28px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  gap: 18px;
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(8px);
+  transition: opacity 0.32s ease, transform 0.32s ease;
   pointer-events: none;
+  z-index: 2;
 }
 
 .pcard.settled:hover .pcard-overlay {
@@ -661,25 +678,32 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   pointer-events: all;
 }
 
-.pov-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; }
+.pov-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
 
-.pov-targets { list-style: none; display: flex; flex-direction: column; gap: 7px; flex: 1; }
-.pov-targets li { font-size: 13px; color: rgba(255,255,255,0.9); padding-left: 16px; position: relative; line-height: 1.5; }
-.pov-targets li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-size: 11px; }
+.pov-targets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.pov-targets li { font-size: 14px; color: rgba(255,255,255,0.92); padding-left: 18px; position: relative; line-height: 1.6; }
+.pov-targets li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
 
 .btn-pov-detail {
   display: block;
   text-align: center;
-  padding: 9px 14px;
-  background: rgba(255,255,255,0.12);
-  border: 1.5px solid rgba(255,255,255,0.35);
+  padding: 13px;
+  background: rgba(255,255,255,0.13);
+  border: 1.5px solid rgba(255,255,255,0.4);
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--white);
   transition: background 0.2s, border-color 0.2s;
+  margin-top: 4px;
 }
-.btn-pov-detail:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.65); }
+.btn-pov-detail:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.7); }
 
 /* 카드 하단 */
 .pcard-footer { display: flex; flex-direction: column; gap: 8px; padding: 20px 28px 28px; }
@@ -698,7 +722,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .btn-pf-consult:hover { background: var(--green); color: var(--white); }
 
 .btn-pf-detail {
-  display: none;
+  display: none; /* PC: 기본 숨김 — 호버 오버레이 안 버튼으로 대체 */
   text-align: center;
   padding: 10px;
   border-radius: 8px;
@@ -752,6 +776,27 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .dp-ref-btn { display: inline-block; margin-top: 16px; }
 
+.detail-main { margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); background: var(--white); }
+
+/* 서비스 소개 하이라이트 카드 */
+.dp-highlights { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+.dp-hl-card { background: var(--gray-100); border-radius: var(--r); padding: 22px 20px; border-left: 3px solid var(--gray-200); transition: border-color 0.2s; }
+.dp-hl-card:hover { border-color: var(--green); }
+.dp-hl-card h4 { font-size: 14px; font-weight: 700; color: var(--gray-900); margin-bottom: 12px; line-height: 1.4; }
+.dp-hl-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.dp-hl-card ul li { font-size: 13px; color: var(--gray-700); padding-left: 14px; position: relative; line-height: 1.65; }
+.dp-hl-card ul li::before { content: '·'; position: absolute; left: 0; color: var(--green); font-weight: 900; font-size: 16px; line-height: 1.2; }
+.dp-hl-accent { background: linear-gradient(135deg, #f0fdf4 0%, #fff 100%); border-left-color: var(--green); }
+.dp-hl-accent h4 { color: var(--green-dark, #1f5c2c); }
+
+/* 상품 구성 */
+.dp-elements { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+.dp-el-item { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: var(--r); padding: 22px 14px; text-align: center; transition: border-color 0.22s, box-shadow 0.22s; }
+.dp-el-item:hover { border-color: var(--green); box-shadow: 0 4px 16px rgba(45,122,60,0.1); }
+.dp-el-icon { font-size: 26px; margin-bottom: 10px; line-height: 1; }
+.dp-el-name { font-size: 13px; font-weight: 700; color: var(--gray-900); line-height: 1.55; margin-bottom: 8px; }
+.dp-el-caption { font-size: 10px; font-weight: 700; color: var(--green); letter-spacing: 1.5px; text-transform: uppercase; }
+
 .dp-cta { background: var(--dark2); border-radius: var(--r-lg); padding: 48px 40px; text-align: center; }
 .dp-cta h3 { font-size: 24px; font-weight: 900; color: var(--white); margin-bottom: 10px; }
 .dp-cta p { font-size: 15px; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
@@ -797,6 +842,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .pcard-overlay { display: none; }
   .btn-pf-detail { display: block; }
   /* 모바일: 상세페이지 */
+  .dp-highlights { grid-template-columns: 1fr; }
   .dp-recommend { grid-template-columns: 1fr; }
   .dp-steps { flex-direction: column; }
   .dps-arrow { transform: rotate(90deg); align-self: center; padding: 6px 0; }

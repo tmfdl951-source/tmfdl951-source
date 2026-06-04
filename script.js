@@ -48,7 +48,14 @@ function runHeroAnim() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(runHeroAnim, 150);
+  /* 해시로 진입 시 해당 페이지 표시 후 해시 제거 — 새로고침 시 항상 홈 표시 */
+  const hash = window.location.hash.replace('#', '');
+  if (hash && document.getElementById('page-' + hash)) {
+    showPage(hash);
+    history.replaceState(null, '', window.location.pathname);
+  } else {
+    setTimeout(runHeroAnim, 150);
+  }
 });
 
 /* ── 상품소개 카드 팝 애니메이션 ── */
