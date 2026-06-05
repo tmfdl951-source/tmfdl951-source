@@ -158,6 +158,22 @@ document.addEventListener('click', e => {
   if (!isActive) card.classList.add('mobile-active');
 });
 
+/* ── 스크롤 리빌 (Intersection Observer) ── */
+function initScrollReveal() {
+  const targets = document.querySelectorAll('.sr-target');
+  if (!targets.length) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('sr-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  targets.forEach(el => observer.observe(el));
+}
+document.addEventListener('DOMContentLoaded', initScrollReveal);
+
 /* ── 문의 폼 ── */
 document.getElementById('contactForm').addEventListener('submit', e => {
   e.preventDefault();

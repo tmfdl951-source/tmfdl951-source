@@ -780,6 +780,118 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .detail-main { margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); background: var(--white); }
 
+/* ═══════════════════════════════════════
+   스크롤 리빌
+═══════════════════════════════════════ */
+.sr-target {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sr-target.sr-visible { opacity: 1; transform: translateY(0); }
+.trust-grid .trust-card:nth-child(2) { transition-delay: 0.13s; }
+.trust-grid .trust-card:nth-child(3) { transition-delay: 0.26s; }
+.promise-list .promise-item:nth-child(2) { transition-delay: 0.13s; }
+.promise-list .promise-item:nth-child(3) { transition-delay: 0.26s; }
+
+/* ═══════════════════════════════════════
+   섹션 A — 신뢰 3단
+═══════════════════════════════════════ */
+.trust-section { background: var(--gray-100); padding: 88px 0; }
+.trust-inner { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+.trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+.trust-card {
+  background: var(--white);
+  border-radius: var(--r-lg);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1.5px solid var(--gray-200);
+  transition: box-shadow 0.25s, border-color 0.25s;
+}
+.trust-card:hover { border-color: var(--green); box-shadow: 0 8px 32px rgba(45,122,60,0.1); }
+
+.trust-card-title { font-size: 18px; font-weight: 700; color: var(--gray-900); line-height: 1.55; }
+.trust-card-title em { font-style: normal; color: var(--green); }
+
+.trust-placeholder {
+  width: 100%;
+  flex: 1;
+  min-height: 180px;
+  background: var(--gray-100);
+  border-radius: var(--r);
+  border: 2px dashed var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.trust-placeholder span { font-size: 12px; color: var(--gray-500); text-align: center; line-height: 1.7; }
+
+.trust-card-desc { font-size: 14px; color: var(--gray-500); line-height: 1.8; }
+.trust-card-desc strong { color: var(--green-dark, #1f5c2c); font-weight: 700; }
+.trust-card-label { font-size: 14px; font-weight: 600; color: var(--gray-700); line-height: 1.6; }
+.trust-card-label small { font-size: 12px; color: var(--gray-500); font-weight: 400; }
+
+.trust-stat-box {
+  font-size: 38px;
+  font-weight: 900;
+  color: var(--green);
+  line-height: 1.35;
+  text-align: center;
+  padding: 18px 0;
+  border-top: 2px solid var(--green-light);
+  border-bottom: 2px solid var(--green-light);
+}
+
+.trust-highlight-tag {
+  display: inline-block;
+  background: var(--green);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px 20px;
+  border-radius: 24px;
+  align-self: flex-start;
+}
+
+/* ═══════════════════════════════════════
+   섹션 B — 3가지 약속
+═══════════════════════════════════════ */
+.promise-section { background: var(--dark2); padding: 88px 0; }
+.promise-inner { max-width: 860px; margin: 0 auto; padding: 0 28px; }
+
+.promise-header { text-align: center; margin-bottom: 52px; }
+.promise-header h2 { font-size: clamp(22px, 3.5vw, 34px); font-weight: 900; color: var(--white); line-height: 1.5; margin-bottom: 14px; }
+.promise-sub { font-size: 14px; color: rgba(255,255,255,0.4); }
+
+.promise-list { display: flex; flex-direction: column; gap: 18px; }
+.promise-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-left: 3px solid var(--green);
+  border-radius: var(--r);
+  padding: 24px 28px;
+  transition: background 0.22s, border-left-color 0.22s;
+}
+.promise-item:hover { background: rgba(45,122,60,0.12); border-left-color: var(--gold); }
+.promise-num { font-size: 28px; font-weight: 900; color: var(--green); flex-shrink: 0; line-height: 1; min-width: 38px; }
+.promise-item p { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.85; padding-top: 2px; }
+.promise-item p strong { color: var(--gold); font-weight: 700; }
+
+@media (max-width: 1024px) { .trust-grid { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; } }
+@media (max-width: 768px) {
+  .trust-section, .promise-section { padding: 60px 0; }
+  .promise-item { flex-direction: column; gap: 8px; }
+  .promise-num { font-size: 22px; }
+  .promise-item p { font-size: 15px; }
+  .trust-stat-box { font-size: 30px; }
+}
+
 /* 서비스 소개 하이라이트 카드 */
 .dp-highlights { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
 .dp-hl-card { background: var(--gray-100); border-radius: var(--r); padding: 22px 20px; border-left: 3px solid var(--gray-200); transition: border-color 0.2s; }
