@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>블로그 / 체험단 / 기자단 | 동행이음</title>
+  <title>체험단 / 기자단 | 동행이음</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
@@ -507,6 +507,52 @@
   .pc-cta-phone { font-size: 14px; color: rgba(255,255,255,0.5); }
   .pc-cta-phone a { color: var(--gold); font-weight: 700; text-decoration: none; }
 
+  /* ── 두 가지 방식 카드 ── */
+  .pc-types-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 56px;
+  }
+  .pc-type-card {
+    background: var(--gray-100);
+    border-radius: 20px;
+    padding: 48px 40px;
+    border-left: 4px solid var(--green);
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .pc-type-card:hover {
+    box-shadow: 0 8px 32px rgba(45,122,60,0.12);
+    transform: translateY(-4px);
+  }
+  .pc-type-num {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--green);
+    margin-bottom: 14px;
+  }
+  .pc-type-title {
+    font-size: clamp(28px, 3vw, 44px);
+    font-weight: 900;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+    line-height: 1.2;
+    word-break: keep-all;
+  }
+  .pc-type-sub {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 20px;
+  }
+  .pc-type-desc {
+    font-size: 16px;
+    color: var(--gray-500);
+    line-height: 1.85;
+    word-break: keep-all;
+  }
+
   /* ── 반응형 ── */
   @media (max-width: 1024px) {
     .pc-reason-grid { grid-template-columns: 1fr; }
@@ -532,12 +578,13 @@
     .pc-label { display: block; text-align: center; }
     .pc-h2 { text-align: center; font-size: clamp(26px, 7.5vw, 40px); }
 
-    /* 기자단이란? */
+    /* 두 가지 방식 */
     .pc-about-section { padding: 88px 0; }
     .pc-about-block { text-align: center; }
-    .pc-about-heading { font-size: clamp(28px, 8vw, 40px); margin-bottom: 32px; }
-    .pc-about-body { font-size: 16px; }
-    .pc-about-accent { text-align: center; padding: 16px 20px; margin-top: 20px; border-left: none; border-top: 4px solid var(--green); border-radius: 0 0 12px 12px; }
+    .pc-about-heading { font-size: clamp(26px, 7.5vw, 38px); margin-bottom: 24px; }
+    .pc-types-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
+    .pc-type-card { padding: 32px 24px; }
+    .pc-type-title { font-size: clamp(24px, 7vw, 32px); }
 
     /* 이유 섹션 */
     .pc-reasons-section { padding: 88px 0; }
@@ -606,10 +653,9 @@
     ══════════════════════════ -->
     <section class="pc-intro">
       <div class="pc-intro-inner">
-        <span class="pc-intro-tag">플레이스 마케팅 실행사, 동행이음</span>
-        <p class="pc-intro-pre">블로그·체험단·기자단,</p>
-        <h1 class="pc-intro-h1">왜 필요한지<br><em>알아야 합니다</em></h1>
-        <p class="pc-intro-q">고객은 검색 결과 곳곳에서 매장을 확인합니다.</p>
+        <span class="pc-intro-tag">체험단·기자단</span>
+        <h1 class="pc-intro-h1">후기가 곧,<br><em>매장의 신뢰입니다</em></h1>
+        <p class="pc-intro-q">고객은 방문 전, 검색 속 후기로 매장을 판단합니다.</p>
       </div>
       <div class="pc-intro-scroll">
         <span>scroll</span>
@@ -618,33 +664,39 @@
     </section>
 
     <!-- ══════════════════════════
-         1. 기자단이란?
+         1. 두 가지 방식 소개
     ══════════════════════════ -->
     <section class="pc-about-section">
       <div class="pc-inner">
         <div class="pc-about-block">
           <span class="pc-label sr" style="text-align:center; display:block; margin-bottom:20px;">ABOUT</span>
-          <h2 class="pc-about-heading sr sr-d1">기자단이란?</h2>
-          <p class="pc-about-body sr sr-d2">
-            <strong>전문 작가</strong>가 매장·브랜드 정보를 <strong>기사 형태의 고품질 콘텐츠</strong>로 제작해<br>
-            네이버 통합검색·블로그 영역에 발행하는 마케팅입니다.
-          </p>
-          <div class="pc-about-accent sr sr-d3">
-            광고 티가 나는 홍보가 아니라 <em>정보성 콘텐츠</em>로 다가가기 때문에,<br>
-            잠재 고객에게 <em>자연스럽고 신뢰감 있게</em> 매장을 알릴 수 있습니다.
+          <h2 class="pc-about-heading sr sr-d1">두 가지 방식으로<br>검색 후기를 채웁니다</h2>
+          <div class="pc-types-grid">
+            <div class="pc-type-card sr-left">
+              <p class="pc-type-num">01</p>
+              <h3 class="pc-type-title">기자단</h3>
+              <p class="pc-type-sub">정보성 후기 콘텐츠</p>
+              <p class="pc-type-desc">실제 방문보다 원고를 기반으로 소개·후기형 콘텐츠를 발행하는 방식</p>
+            </div>
+            <div class="pc-type-card sr-right">
+              <p class="pc-type-num">02</p>
+              <h3 class="pc-type-title">체험단</h3>
+              <p class="pc-type-sub">실제 방문 후기 콘텐츠</p>
+              <p class="pc-type-desc">방문·체험 후 실제 후기처럼 콘텐츠를 남기는 방식</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ══════════════════════════
-         2. 블로그 마케팅이 필요한 이유
+         2. 체험단·기자단이 필요한 이유
     ══════════════════════════ -->
     <section class="pc-reasons-section">
       <div class="pc-inner">
         <div class="pc-reasons-header">
           <span class="pc-label pc-label-white sr" style="display:block; text-align:center;">WHY IT MATTERS</span>
-          <h2 class="pc-h2 pc-h2-white sr sr-d1" style="text-align:center;">블로그 마케팅이<br>필요한 이유</h2>
+          <h2 class="pc-h2 pc-h2-white sr sr-d1" style="text-align:center;">체험단·기자단이<br>필요한 이유</h2>
         </div>
         <div class="pc-reason-grid">
           <div class="pc-reason-item sr-left">
@@ -654,7 +706,7 @@
           </div>
           <div class="pc-reason-item sr-right">
             <span class="pc-reason-num">02</span>
-            <p class="pc-reason-title">블로그·기자단 콘텐츠가 검색 화면을 풍성하게 채웁니다</p>
+            <p class="pc-reason-title">체험단·기자단 후기가 검색 화면을 풍성하게 채웁니다</p>
             <p class="pc-reason-desc">매장 관련 콘텐츠가 쌓일수록 신뢰도가 높아집니다.</p>
           </div>
           <div class="pc-reason-item sr-left">
@@ -694,7 +746,7 @@
             <div class="pc-step-num">02</div>
             <p class="pc-step-label">INFO ORGANIZING</p>
             <p class="pc-step-title">광고 자료 수집</p>
-            <p class="pc-step-desc">기자단 광고용 사진 자료를 전달받아 콘텐츠 제작을 준비합니다.</p>
+            <p class="pc-step-desc">광고용 사진 자료를 전달받아 콘텐츠 제작을 준비합니다.</p>
           </div>
           <div class="pc-step sr sr-d2">
             <div class="pc-step-num">03</div>
@@ -705,8 +757,8 @@
           <div class="pc-step sr sr-d3">
             <div class="pc-step-num">04</div>
             <p class="pc-step-label">MARKETING START</p>
-            <p class="pc-step-title">기자단 원고 발행</p>
-            <p class="pc-step-desc">컨펌 완료 후 요청 3일 이내에 기자단 원고를 발행합니다.</p>
+            <p class="pc-step-title">원고 발행</p>
+            <p class="pc-step-desc">컨펌 완료 후 요청 3일 이내에 원고를 발행합니다.</p>
           </div>
         </div>
       </div>
@@ -766,7 +818,7 @@
         <div class="pc-rec-grid">
           <div class="pc-rec-item sr-scale">
             <span class="pc-rec-emoji">📝</span>
-            <p class="pc-rec-text">블로그 리뷰가 부족해 검색 노출이 약한 매장</p>
+            <p class="pc-rec-text">체험단·기자단 후기가 부족해 검색 노출이 약한 매장</p>
           </div>
           <div class="pc-rec-item sr-scale sr-d1">
             <span class="pc-rec-emoji">🔍</span>
