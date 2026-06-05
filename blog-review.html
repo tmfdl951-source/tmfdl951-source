@@ -22,8 +22,7 @@
         <a href="index.html" class="nav-link">문의하기</a>
       </nav>
       <div class="nav-buttons">
-        <a href="index.html" class="btn btn-outline">견적문의</a>
-        <a href="index.html" class="btn btn-primary">신청서작성</a>
+        <a href="index.html" class="btn btn-primary">문의하기</a>
       </div>
       <button class="hamburger" id="hamburger">
         <span></span><span></span><span></span>
@@ -122,13 +121,6 @@
         </div>
       </div>
 
-      <!-- 레퍼런스 -->
-      <div class="dp-section">
-        <h3>레퍼런스</h3>
-        <p class="dp-text">실제 진행한 블로그·체험단·기자단 마케팅 성공 사례를 확인하세요.</p>
-        <a href="index.html" class="btn btn-outline dp-ref-btn">레퍼런스 보러가기 →</a>
-      </div>
-
       <!-- 상담 문의 CTA -->
       <div class="dp-cta">
         <h3>지금 바로 시작해보세요</h3>
@@ -180,6 +172,9 @@
   </div>
 
   <script>
+    /* 뒤로가기로 index.html 진입 시 상품소개 섹션 복원 */
+    sessionStorage.setItem('prevPage', 'services');
+
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
       header.classList.toggle('scrolled', window.scrollY > 10);

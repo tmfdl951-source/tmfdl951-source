@@ -48,12 +48,20 @@ function runHeroAnim() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  /* 해시로 진입 시 해당 페이지 표시 후 해시 제거 — 새로고침 시 항상 홈 표시 */
   const hash = window.location.hash.replace('#', '');
+  const prevPage = sessionStorage.getItem('prevPage');
+
   if (hash && document.getElementById('page-' + hash)) {
+    /* 해시 진입 (예: index.html#services, index.html#reference) */
     showPage(hash);
     history.replaceState(null, '', window.location.pathname);
+    sessionStorage.removeItem('prevPage');
+  } else if (prevPage && document.getElementById('page-' + prevPage)) {
+    /* 상세페이지에서 뒤로가기로 진입 → 이전 섹션 복원 */
+    showPage(prevPage);
+    sessionStorage.removeItem('prevPage');
   } else {
+    /* 직접 접속 / 새로고침 → 홈 히어로 */
     setTimeout(runHeroAnim, 150);
   }
 });
@@ -128,19 +136,26 @@ document.addEventListener('click', e => {
   }
 });
 
-/* ── 상품 카드 클릭 시 상세설명 토글 ── */
+/* ── 모바일: 카드 탭 시 오버레이 토글 ── */
 document.addEventListener('click', e => {
-  const card = e.target.closest('#page-services .prod-card');
-  if (!card) return;
-  const detail = card.querySelector('.prod-detail');
-  if (!detail) return;
-  const isOpen = detail.classList.contains('open');
-  document.querySelectorAll('#page-services .prod-detail').forEach(d => d.classList.remove('open'));
-  document.querySelectorAll('#page-services .prod-card').forEach(c => c.classList.remove('card-open'));
-  if (!isOpen) {
-    detail.classList.add('open');
-    card.classList.add('card-open');
+  if (window.innerWidth > 768) return; // PC는 CSS hover로 처리
+
+  /* 상세페이지 버튼 탭 → 링크 이동만, 오버레이 토글 없음 */
+  if (e.target.closest('.btn-pf-detail')) return;
+
+  const card = e.target.closest('#page-services .pcard');
+
+  /* 카드 밖 탭 → 모든 오버레이 닫기 */
+  if (!card) {
+    document.querySelectorAll('#page-services .pcard.mobile-active')
+      .forEach(c => c.classList.remove('mobile-active'));
+    return;
   }
+
+  const isActive = card.classList.contains('mobile-active');
+  document.querySelectorAll('#page-services .pcard.mobile-active')
+    .forEach(c => c.classList.remove('mobile-active'));
+  if (!isActive) card.classList.add('mobile-active');
 });
 
 /* ── 문의 폼 ── */

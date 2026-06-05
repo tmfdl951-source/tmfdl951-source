@@ -130,6 +130,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .tl-sub { margin-bottom: 36px; }
 .reveal-fade { display: inline-block; font-size: clamp(15px, 1.8vw, 18px); color: rgba(255,255,255,0.5); font-weight: 400; opacity: 0; transform: translateY(12px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.mobile-br { display: none; }
 .tl-sub.go .reveal-fade { opacity: 1; transform: translateY(0); }
 
 .tl-stats { display: flex; align-items: center; margin-bottom: 40px; opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
@@ -436,6 +437,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .qc:hover { opacity: 0.85; }
 .qc.phone { background: rgba(45,122,60,0.3); }
 .qc.email { background: rgba(201,168,76,0.18); }
+.qc.kakao { background: rgba(254,229,0,0.18); }
 .qc > span { font-size: 22px; }
 .qc strong { display: block; font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 2px; }
 .qc p { font-size: 15px; font-weight: 700; }
@@ -815,7 +817,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 @media (max-width: 768px) {
   :root { --header-h: 60px; }
   .hero-stage { padding: 0 24px; }
-  .reveal-text { letter-spacing: -1px; }
+  .reveal-text { font-size: clamp(32px, 8.5vw, 48px); letter-spacing: -0.5px; word-break: keep-all; }
+  .reveal-fade { font-size: 13px; word-break: keep-all; }
+  .mobile-br { display: block; }
   .tl-btns { flex-direction: column; }
   .btn-hero-p, .btn-hero-g { width: 100%; text-align: center; }
   .hstat { padding: 0 14px; }
@@ -839,12 +843,31 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .process-arrow { padding: 8px 0; transform: rotate(90deg); align-self: center; }
   /* 모바일: 오버레이 숨기고 하단 버튼 표시 */
   .pcard-grid { max-width: 100%; }
-  .pcard-overlay { display: none; }
+  /* 모바일: 오버레이 탭 토글 (display:none → opacity로 전환) */
+  .pcard-overlay {
+    display: flex;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+  }
+  .pcard.mobile-active .pcard-overlay {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+  /* 오버레이 안 버튼은 모바일에서 숨김 (추천 대상 텍스트만 표시) */
+  .btn-pov-detail { display: none; }
+  /* 상세페이지 버튼 항상 오버레이 위에 표시 */
+  .pcard-footer {
+    position: relative;
+    z-index: 3;
+  }
   .btn-pf-detail { display: block; }
   /* 모바일: 상세페이지 */
   .dp-highlights { grid-template-columns: 1fr; }
   .dp-recommend { grid-template-columns: 1fr; }
-  .dp-steps { flex-direction: column; }
+  .dp-steps { flex-direction: column; align-items: stretch; }
+  .dp-step { width: 100%; min-width: 0; flex: none; }
   .dps-arrow { transform: rotate(90deg); align-self: center; padding: 6px 0; }
   .dp-wrap { max-width: 100%; }
   .dp-hero { padding: 28px 0 24px; }
