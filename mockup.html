@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>동행이음 | 목업</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
 /* ═══════════════════════════════════════
    RESET & BASE
 ═══════════════════════════════════════ */
@@ -849,13 +858,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   height: 100%;
   display: block;
 }
-/* 카드 1 표: 영상 비율에 맞춰 박스 크기 결정 */
-.trust-video-wrap:not(.trust-video-card3) {
-  height: auto;
-  aspect-ratio: 430 / 258;
-}
+/* 카드 1 표: 잘리지 않게 contain */
 .trust-video-wrap:not(.trust-video-card3) video {
-  object-fit: fill;
+  object-fit: contain;
+  background: var(--gray-100);
 }
 /* 카드 3 사무실: 꽉 채우기 */
 .trust-video-card3 video {

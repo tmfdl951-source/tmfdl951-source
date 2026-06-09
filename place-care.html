@@ -38,42 +38,67 @@
 
   /* ── 공통 섹션 — 폭 넓게, 여백 크게 ── */
 
-  /* 스크롤 리빌 — 기본 (위→아래) */
+  /* ── 스크롤 리빌 시스템 ── */
+
+  /* 기본: 위에서 페이드업 */
   .sr {
     opacity: 0;
-    transform: translateY(48px);
-    transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1);
+    transform: translateY(56px);
+    transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
   }
   .sr.in { opacity: 1; transform: translateY(0); }
 
-  /* 왼쪽에서 슬라이드인 */
+  /* 왼쪽 슬라이드인 */
   .sr-left {
     opacity: 0;
-    transform: translateX(-64px);
-    transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+    transform: translateX(-80px);
+    transition: opacity 0.95s cubic-bezier(0.22,1,0.36,1), transform 0.95s cubic-bezier(0.22,1,0.36,1);
   }
   .sr-left.in { opacity: 1; transform: translateX(0); }
 
-  /* 오른쪽에서 슬라이드인 */
+  /* 오른쪽 슬라이드인 */
   .sr-right {
     opacity: 0;
-    transform: translateX(64px);
-    transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+    transform: translateX(80px);
+    transition: opacity 0.95s cubic-bezier(0.22,1,0.36,1), transform 0.95s cubic-bezier(0.22,1,0.36,1);
   }
   .sr-right.in { opacity: 1; transform: translateX(0); }
 
-  /* 스케일 + 페이드업 */
+  /* 스케일업 + 페이드 */
   .sr-scale {
     opacity: 0;
-    transform: scale(0.88) translateY(24px);
-    transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+    transform: scale(0.84) translateY(28px);
+    transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1);
   }
   .sr-scale.in { opacity: 1; transform: scale(1) translateY(0); }
 
+  /* 줌인 + 블러 해제 — 이미지·섹션 인상적 등장 */
+  .sr-zoom {
+    opacity: 0;
+    transform: scale(0.88) translateY(24px);
+    filter: blur(8px);
+    transition: opacity 0.95s cubic-bezier(0.22,1,0.36,1),
+                transform 0.95s cubic-bezier(0.22,1,0.36,1),
+                filter 0.75s cubic-bezier(0.22,1,0.36,1);
+  }
+  .sr-zoom.in { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+
+  /* 바운시 팝 — 숫자·서클 강조 등장 */
+  .sr-pop {
+    opacity: 0;
+    transform: scale(0.45) translateY(20px);
+    transition: opacity 0.55s cubic-bezier(0.34,1.56,0.64,1),
+                transform 0.65s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .sr-pop.in { opacity: 1; transform: scale(1) translateY(0); }
+
+  /* 딜레이 */
   .sr-d1 { transition-delay: 0.1s; }
   .sr-d2 { transition-delay: 0.2s; }
   .sr-d3 { transition-delay: 0.3s; }
   .sr-d4 { transition-delay: 0.4s; }
+  .sr-d5 { transition-delay: 0.55s; }
+  .sr-d6 { transition-delay: 0.7s; }
 
   .pc-section {
     width: 100%;
@@ -154,6 +179,9 @@
     border-radius: 50%;
     top: -300px; right: -200px;
     filter: blur(120px);
+    animation: glowFloat1 12s ease-in-out infinite 1s;
+    transform: translateY(var(--hero-py, 0px));
+    will-change: transform;
   }
   .pc-hero-inner {
     max-width: 1600px;
@@ -495,6 +523,9 @@
     border-radius: 50%;
     bottom: -300px; left: -200px;
     filter: blur(130px);
+    animation: glowFloat1 10s ease-in-out infinite;
+    transform: translateY(var(--intro-py, 0px));
+    will-change: transform;
   }
   .pc-intro::after {
     content: '';
@@ -505,6 +536,17 @@
     border-radius: 50%;
     top: -150px; right: -100px;
     filter: blur(120px);
+    animation: glowFloat2 13s ease-in-out infinite;
+  }
+  @keyframes glowFloat1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    40%       { transform: translate(40px, -50px) scale(1.08); }
+    70%       { transform: translate(-20px, 30px) scale(0.96); }
+  }
+  @keyframes glowFloat2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    35%       { transform: translate(-30px, 40px) scale(1.1); }
+    65%       { transform: translate(25px, -20px) scale(0.94); }
   }
   .pc-intro-inner {
     position: relative;
@@ -714,11 +756,13 @@
   }
   @media (max-width: 768px) {
     /* 좌우 슬라이드 → 모바일에서 위아래 페이드로 전환 */
-    .sr-left, .sr-right {
+    .sr-left, .sr-right, .sr-zoom {
       transform: translateY(40px);
+      filter: none;
     }
-    .sr-left.in, .sr-right.in {
+    .sr-left.in, .sr-right.in, .sr-zoom.in {
       transform: translateY(0);
+      filter: none;
     }
 
     /* 공통 */
@@ -727,7 +771,21 @@
     .pc-back-bar { padding: 10px 20px; }
     .pc-intro-inner { padding: 0 24px; }
 
-    /* 한글 단어 잘림 방지 */
+    /* 모바일 인트로 h1 — 화면 내 1줄씩 깔끔하게 */
+    .pc-intro-h1 {
+      font-size: clamp(36px, 9.5vw, 52px);
+      word-break: keep-all;
+    }
+    .pc-intro-pre { font-size: clamp(16px, 5vw, 28px); word-break: keep-all; }
+    .pc-intro-q   { font-size: clamp(13px, 3.5vw, 18px); word-break: keep-all; }
+
+    /* 모바일 히어로 h1 */
+    .pc-hero-h1 {
+      font-size: clamp(28px, 7.5vw, 40px);
+      word-break: keep-all;
+    }
+
+    /* 한글 단어 잘림 방지 — 전체 */
     .pc-h2, .pc-desc, .pc-hero-sub,
     .pc-bullet li, .pc-trust-title, .pc-trust-desc,
     .pc-step-title, .pc-step-desc, .pc-card-title, .pc-card-desc,
@@ -736,7 +794,7 @@
 
     /* 타이포 공통 — 가운데 정렬 */
     .pc-label { display: block; text-align: center; }
-    .pc-h2 { text-align: center; font-size: clamp(28px, 8vw, 44px); }
+    .pc-h2 { text-align: center; font-size: clamp(24px, 7vw, 40px); }
     .pc-desc {
       text-align: center;
       max-width: 100%;
@@ -935,7 +993,7 @@
               최소한의 비용으로 가장 안전하고 효율적으로 플레이스의 기반을 다집니다.
             </p>
           </div>
-          <div class="pc-story-img sr-right">
+          <div class="pc-story-img sr-zoom">
             <div class="ph-img ph-img-md">서비스 소개 이미지<br>(교체 예정)</div>
           </div>
         </div>
@@ -993,12 +1051,12 @@
             <span class="pc-label">1-WEEK CYCLE</span>
             <h2 class="pc-h2">한 달이 아닌<br>1주 단위로 관리합니다</h2>
             <ul class="pc-bullet">
-              <li>한 달이 아닌 1주 단위로 순위 변동을 정밀 체크하고 즉시 대응합니다</li>
-              <li>상황에 따라 작업 비중과 전략을 유연하게 조정하여 예산 낭비를 최소화합니다</li>
-              <li>빠른 피드백 주기로 효율을 극대화합니다</li>
+              <li class="sr sr-d2">한 달이 아닌 1주 단위로 순위 변동을 정밀 체크하고 즉시 대응합니다</li>
+              <li class="sr sr-d3">상황에 따라 작업 비중과 전략을 유연하게 조정하여 예산 낭비를 최소화합니다</li>
+              <li class="sr sr-d4">빠른 피드백 주기로 효율을 극대화합니다</li>
             </ul>
           </div>
-          <div class="pc-story-img sr-left">
+          <div class="pc-story-img sr-zoom">
             <div class="ph-img ph-img-md">2주 관리 이미지<br>(교체 예정)</div>
           </div>
         </div>
@@ -1015,12 +1073,12 @@
             <span class="pc-label">DATA BASED</span>
             <h2 class="pc-h2">매장 상태를 진단하고<br>최적의 비율로 투입합니다</h2>
             <ul class="pc-bullet">
-              <li>매장 상태를 진단해 트래픽 유입량·블로그리뷰 작업량을 최적 비율로 조합합니다</li>
-              <li>임의 조작 없이 관리만으로 순위가 점진적으로 상승하도록 설계합니다</li>
-              <li>처음부터 큰 금액을 요구하지 않고 매장 상황에 맞춰 부담 없이 시작합니다</li>
+              <li class="sr sr-d2">매장 상태를 진단해 트래픽 유입량·블로그리뷰 작업량을 최적 비율로 조합합니다</li>
+              <li class="sr sr-d3">임의 조작 없이 관리만으로 순위가 점진적으로 상승하도록 설계합니다</li>
+              <li class="sr sr-d4">처음부터 큰 금액을 요구하지 않고 매장 상황에 맞춰 부담 없이 시작합니다</li>
             </ul>
           </div>
-          <div class="pc-story-img sr-right">
+          <div class="pc-story-img sr-zoom">
             <div class="ph-img ph-img-md">데이터 관리 이미지<br>(교체 예정)</div>
           </div>
         </div>
@@ -1038,19 +1096,19 @@
           <p>자연스럽게 노출이 확대되도록 데이터 기반 관리형 서비스를 운영합니다.</p>
         </div>
         <div class="pc-circles-row">
-          <div class="pc-circle pc-circle-filled sr-scale">
+          <div class="pc-circle pc-circle-filled sr-pop">
             <span class="pc-circle-num">01</span>
             <p class="pc-circle-title">플레이스 최적화 관리 패키지</p>
           </div>
-          <div class="pc-circle pc-circle-outline sr-scale sr-d1">
+          <div class="pc-circle pc-circle-outline sr-pop sr-d2">
             <span class="pc-circle-num">02</span>
             <p class="pc-circle-title">플레이스 검색광고</p>
           </div>
-          <div class="pc-circle pc-circle-outline sr-scale sr-d2">
+          <div class="pc-circle pc-circle-outline sr-pop sr-d3">
             <span class="pc-circle-num">03</span>
             <p class="pc-circle-title">블로그 체험단</p>
           </div>
-          <div class="pc-circle pc-circle-filled sr-scale sr-d3">
+          <div class="pc-circle pc-circle-filled sr-pop sr-d5">
             <span class="pc-circle-num">04</span>
             <p class="pc-circle-title">영수증 리뷰</p>
           </div>
@@ -1071,17 +1129,17 @@
           <h2 class="pc-h2 pc-h2-white sr sr-d1">건바이건,<br>투명하게 진행합니다</h2>
         </div>
         <div class="pc-trust-grid">
-          <div class="pc-trust-item sr">
+          <div class="pc-trust-item sr-left">
             <div class="pc-trust-icon">📋</div>
             <p class="pc-trust-title">매월 투명한 리포트 공유</p>
             <p class="pc-trust-desc">데이터로 성과를 증명합니다.<br>숫자로 결과를 확인하세요.</p>
           </div>
-          <div class="pc-trust-item sr sr-d1">
+          <div class="pc-trust-item sr-zoom sr-d2">
             <div class="pc-trust-icon">🚫</div>
             <p class="pc-trust-title">장기계약 X / 영업전화 X</p>
             <p class="pc-trust-desc">필요한 시점에 필요한 만큼만.<br>부담스러운 계약은 없습니다.</p>
           </div>
-          <div class="pc-trust-item sr sr-d2">
+          <div class="pc-trust-item sr-right sr-d1">
             <div class="pc-trust-icon">🤝</div>
             <p class="pc-trust-title">투명한 건바이건 진행</p>
             <p class="pc-trust-desc">필요한 서비스만 제안합니다.<br>불필요한 추가 비용은 없습니다.</p>
@@ -1134,24 +1192,24 @@
         </div>
         <div class="pc-steps">
           <div class="pc-step sr">
-            <div class="pc-step-num">01</div>
-            <p class="pc-step-title">플레이스 진단</p>
-            <p class="pc-step-desc">현재 플레이스 상태와 알고리즘 반영률을 분석하여 문제점을 파악합니다.</p>
+            <div class="pc-step-num sr-pop" data-count="1">01</div>
+            <p class="pc-step-title sr sr-d3">플레이스 진단</p>
+            <p class="pc-step-desc sr sr-d4">현재 플레이스 상태와 알고리즘 반영률을 분석하여 문제점을 파악합니다.</p>
           </div>
           <div class="pc-step sr sr-d1">
-            <div class="pc-step-num">02</div>
-            <p class="pc-step-title">맞춤 계획 수립</p>
-            <p class="pc-step-desc">트래픽·리뷰의 최적 비율을 조합하여 해당 플레이스에 맞는 계획을 수립합니다.</p>
+            <div class="pc-step-num sr-pop sr-d1" data-count="2">02</div>
+            <p class="pc-step-title sr sr-d4">맞춤 계획 수립</p>
+            <p class="pc-step-desc sr sr-d5">트래픽·리뷰의 최적 비율을 조합하여 해당 플레이스에 맞는 계획을 수립합니다.</p>
           </div>
           <div class="pc-step sr sr-d2">
-            <div class="pc-step-num">03</div>
-            <p class="pc-step-title">1주 단위 투입</p>
-            <p class="pc-step-desc">1주마다 순위·노출 변화를 세밀하게 분석하고 작업량을 유연하게 조정합니다.</p>
+            <div class="pc-step-num sr-pop sr-d2" data-count="3">03</div>
+            <p class="pc-step-title sr sr-d5">1주 단위 투입</p>
+            <p class="pc-step-desc sr sr-d6">1주마다 순위·노출 변화를 세밀하게 분석하고 작업량을 유연하게 조정합니다.</p>
           </div>
           <div class="pc-step sr sr-d3">
-            <div class="pc-step-num">04</div>
-            <p class="pc-step-title">성과 리포트</p>
-            <p class="pc-step-desc">월별 성과 리포트와 다음 달 전략을 공유하여 지속적인 개선을 진행합니다.</p>
+            <div class="pc-step-num sr-pop sr-d3" data-count="4">04</div>
+            <p class="pc-step-title sr sr-d6">성과 리포트</p>
+            <p class="pc-step-desc sr" style="transition-delay:0.8s">월별 성과 리포트와 다음 달 전략을 공유하여 지속적인 개선을 진행합니다.</p>
           </div>
         </div>
       </div>
@@ -1163,7 +1221,7 @@
     <section class="pc-cta-section">
       <div class="pc-inner">
         <span class="pc-cta-label sr">CONTACT US</span>
-        <h2 class="pc-cta-h2 sr-scale sr-d1">지금 바로 시작해보세요</h2>
+        <h2 class="pc-cta-h2 sr-zoom sr-d1">지금 바로 시작해보세요</h2>
         <p class="pc-cta-sub sr sr-d2">
           전담 매니저가 맞춤 전략을 제안해드립니다.<br>
           무료 상담 후 진행 여부를 결정하실 수 있습니다.
@@ -1224,28 +1282,80 @@
   <script>
     sessionStorage.setItem('prevPage', 'services');
 
-    /* 헤더 스크롤 */
+    /* ── 헤더 스크롤 ── */
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
       header.classList.toggle('scrolled', window.scrollY > 10);
-    });
+    }, { passive: true });
 
-    /* 햄버거 */
+    /* ── 햄버거 ── */
     document.getElementById('hamburger').addEventListener('click', () => {
       document.getElementById('navMenu').classList.toggle('open');
     });
 
-    /* 스크롤 리빌 */
+    /* ── 카운트업 (data-count 요소) ── */
+    function animateCountUp(el) {
+      const target = parseInt(el.dataset.count, 10);
+      if (!target) return;
+      const padded = el.textContent.length === 2;
+      let start = null;
+      const duration = 700;
+      function step(ts) {
+        if (!start) start = ts;
+        const progress = Math.min((ts - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const val = Math.round(ease * target);
+        el.textContent = padded ? String(val).padStart(2, '0') : val;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    /* ── 스크롤 리빌 — IntersectionObserver ── */
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('in');
+          /* count-up 자식 요소 트리거 */
+          entry.target.querySelectorAll('[data-count]').forEach(animateCountUp);
+          /* 자기 자신이 data-count 요소인 경우 */
+          if (entry.target.dataset.count) animateCountUp(entry.target);
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.sr, .sr-left, .sr-right, .sr-scale').forEach(el => observer.observe(el));
+    document.querySelectorAll(
+      '.sr, .sr-left, .sr-right, .sr-scale, .sr-zoom, .sr-pop'
+    ).forEach(el => observer.observe(el));
+
+    /* ── 패럴럭스 — 히어로 + 인트로 배경 글로우 ── */
+    const heroSection  = document.querySelector('.pc-hero');
+    const introSection = document.querySelector('.pc-intro');
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const sy = window.scrollY;
+        /* 히어로 패럴럭스: 히어로 범위 내에서만 동작 */
+        if (heroSection) {
+          const hTop = heroSection.offsetTop;
+          const hBot = hTop + heroSection.offsetHeight;
+          if (sy < hBot + 200) {
+            heroSection.style.setProperty('--hero-py', (sy * 0.18) + 'px');
+          }
+        }
+        /* 인트로 패럴럭스 */
+        if (introSection) {
+          const iBot = introSection.offsetHeight;
+          if (sy < iBot + 100) {
+            introSection.style.setProperty('--intro-py', (sy * 0.12) + 'px');
+          }
+        }
+        ticking = false;
+      });
+    }, { passive: true });
   </script>
 </body>
 </html>
