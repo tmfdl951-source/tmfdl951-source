@@ -7,9 +7,574 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+  <style>
+  .pc-page { font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
 
+  /* 뒤로가기 바 */
+  .pc-back-bar {
+    position: fixed;
+    top: var(--header-h);
+    left: 0; right: 0;
+    z-index: 900;
+    background: rgba(8,12,14,0.75);
+    backdrop-filter: blur(8px);
+    padding: 10px 28px;
+    display: flex;
+    align-items: center;
+  }
+  .pc-back-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .pc-back-link:hover { color: var(--green-light, #d1fae5); }
+
+  /* ── 스크롤 리빌 ── */
+  .sr {
+    opacity: 0;
+    transform: translateY(48px);
+    transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1);
+  }
+  .sr.in { opacity: 1; transform: translateY(0); }
+  .sr-left {
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+  }
+  .sr-left.in { opacity: 1; transform: translateX(0); }
+  .sr-right {
+    opacity: 0;
+    transform: translateX(60px);
+    transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+  }
+  .sr-right.in { opacity: 1; transform: translateX(0); }
+  .sr-scale {
+    opacity: 0;
+    transform: scale(0.88) translateY(24px);
+    transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+  }
+  .sr-scale.in { opacity: 1; transform: scale(1) translateY(0); }
+  .sr-d1 { transition-delay: 0.1s; }
+  .sr-d2 { transition-delay: 0.2s; }
+  .sr-d3 { transition-delay: 0.3s; }
+  .sr-d4 { transition-delay: 0.4s; }
+
+  /* ── 공통 ── */
+  .pc-inner { max-width: 1600px; margin: 0 auto; padding: 0 48px; }
+  .pc-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: block;
+  }
+  .pc-label-white { color: rgba(255,255,255,0.5); }
+  .pc-h2 {
+    font-size: clamp(32px, 4.2vw, 58px);
+    font-weight: 900;
+    line-height: 1.2;
+    color: var(--gray-900);
+    margin-bottom: 28px;
+    word-break: keep-all;
+  }
+  .pc-h2-white { color: var(--white); }
+  .pc-desc {
+    font-size: 17px;
+    color: var(--gray-500);
+    line-height: 2;
+    word-break: keep-all;
+  }
+  .pc-desc-white { color: rgba(255,255,255,0.65); }
+
+  /* ── 후킹 인트로 ── */
+  .pc-intro {
+    height: 100vh;
+    min-height: 600px;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .pc-intro::before {
+    content: '';
+    position: absolute;
+    width: 900px; height: 900px;
+    background: var(--green);
+    opacity: 0.13;
+    border-radius: 50%;
+    bottom: -300px; left: -200px;
+    filter: blur(130px);
+  }
+  .pc-intro::after {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: var(--gold);
+    opacity: 0.09;
+    border-radius: 50%;
+    top: -150px; right: -100px;
+    filter: blur(120px);
+  }
+  .pc-intro-inner {
+    position: relative;
+    z-index: 1;
+    padding: 0 40px;
+    max-width: 1200px;
+  }
+  .pc-intro-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 30px;
+    padding: 7px 20px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: introFadeUp 0.8s 0.3s forwards cubic-bezier(0.22,1,0.36,1);
+  }
+  .pc-intro-pre {
+    font-size: clamp(22px, 3.5vw, 40px);
+    font-weight: 500;
+    color: rgba(255,255,255,0.72);
+    margin-bottom: 12px;
+    word-break: keep-all;
+    opacity: 0;
+    animation: introFadeUp 0.8s 0.5s forwards cubic-bezier(0.22,1,0.36,1);
+  }
+  .pc-intro-h1 {
+    font-size: clamp(52px, 9.5vw, 124px);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 40px;
+    word-break: keep-all;
+    opacity: 0;
+    animation: introFadeUp 0.9s 0.7s forwards cubic-bezier(0.22,1,0.36,1);
+  }
+  .pc-intro-h1 em {
+    font-style: normal;
+    color: #6ee87a;
+    text-shadow: 0 0 40px rgba(110,232,122,0.4);
+  }
+  .pc-intro-q {
+    font-size: clamp(15px, 2.2vw, 24px);
+    font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    word-break: keep-all;
+    opacity: 0;
+    animation: introFadeUp 0.8s 1s forwards cubic-bezier(0.22,1,0.36,1);
+  }
+  .pc-intro-scroll {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: introFadeUp 0.8s 1.4s forwards cubic-bezier(0.22,1,0.36,1);
+  }
+  .pc-intro-scroll span {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+  }
+  .pc-scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(45,122,60,0.8), transparent);
+    animation: scrollPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes introFadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50%       { opacity: 1;   transform: scaleY(1.2); }
+  }
+
+  /* ── 서비스 소개 ── */
+  .pc-about-section {
+    background: var(--white);
+    padding: 180px 0;
+  }
+  .pc-about-block {
+    max-width: 960px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .pc-about-heading {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 900;
+    color: var(--gray-900);
+    line-height: 1.2;
+    margin-bottom: 48px;
+    word-break: keep-all;
+  }
+  .pc-about-heading em { font-style: normal; color: var(--green); }
+  .pc-about-body {
+    font-size: clamp(16px, 1.8vw, 21px);
+    color: var(--gray-500);
+    line-height: 2.1;
+    word-break: keep-all;
+    margin-bottom: 24px;
+  }
+  .pc-about-body strong { color: var(--gray-900); font-weight: 700; }
+  .pc-about-accent {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 18px 36px;
+    background: var(--gray-100);
+    border-left: 4px solid var(--green);
+    border-radius: 0 12px 12px 0;
+    font-size: clamp(15px, 1.6vw, 18px);
+    font-weight: 600;
+    color: var(--gray-900);
+    line-height: 1.7;
+    word-break: keep-all;
+    text-align: left;
+  }
+  .pc-about-accent em { font-style: normal; color: var(--green); }
+
+  /* ── 왜 1페이지인가 ── */
+  .pc-reasons-section {
+    background: var(--dark2);
+    padding: 180px 0;
+  }
+  .pc-reasons-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .pc-reason-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .pc-reason-item {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 52px 48px;
+    transition: background 0.25s, border-color 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .pc-reason-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--green);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .pc-reason-item:hover { background: rgba(45,122,60,0.1); border-color: rgba(45,122,60,0.3); }
+  .pc-reason-item:hover::before { opacity: 1; }
+  .pc-reason-num {
+    font-size: clamp(52px, 5vw, 80px);
+    font-weight: 900;
+    color: var(--green);
+    opacity: 0.2;
+    line-height: 1;
+    margin-bottom: 20px;
+    display: block;
+    letter-spacing: -2px;
+  }
+  .pc-reason-title {
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 16px;
+    line-height: 1.4;
+    word-break: keep-all;
+  }
+  .pc-reason-desc {
+    font-size: 15px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.8;
+    word-break: keep-all;
+  }
+
+  /* ── 진행 절차 ── */
+  .pc-process-section {
+    background: var(--gray-100);
+    padding: 180px 0;
+  }
+  .pc-process-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .pc-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+    margin-top: 24px;
+  }
+  .pc-steps::before {
+    content: '';
+    position: absolute;
+    top: 44px;
+    left: calc(12.5% + 16px);
+    right: calc(12.5% + 16px);
+    height: 2px;
+    background: linear-gradient(90deg, var(--green), var(--gold));
+  }
+  .pc-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 16px;
+    position: relative;
+  }
+  .pc-step-num {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--white);
+    font-size: 22px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 20px rgba(45,122,60,0.3);
+  }
+  .pc-step-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .pc-step-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 10px;
+    line-height: 1.4;
+    word-break: keep-all;
+  }
+  .pc-step-desc {
+    font-size: 14px;
+    color: var(--gray-500);
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+
+  /* ── 상품 구성 ── */
+  .pc-elements-section {
+    background: var(--white);
+    padding: 180px 0;
+  }
+  .pc-elements-header {
+    text-align: center;
+    margin-bottom: 72px;
+  }
+  .pc-el-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+  }
+  .pc-el-item {
+    background: var(--gray-100);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 20px;
+    padding: 44px 24px;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.25s;
+  }
+  .pc-el-item:hover {
+    border-color: var(--green);
+    box-shadow: 0 6px 24px rgba(45,122,60,0.12);
+    transform: translateY(-6px);
+  }
+  .pc-el-icon { font-size: 40px; margin-bottom: 18px; line-height: 1; }
+  .pc-el-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 10px;
+    line-height: 1.5;
+    word-break: keep-all;
+  }
+  .pc-el-caption {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--green);
+    text-transform: uppercase;
+  }
+
+  /* ── 이런 매장에 추천 ── */
+  .pc-rec-section {
+    background: var(--gray-100);
+    padding: 180px 0;
+  }
+  .pc-rec-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .pc-rec-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .pc-rec-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--white);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 28px 28px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .pc-rec-item:hover {
+    border-color: var(--green);
+    box-shadow: 0 4px 20px rgba(45,122,60,0.1);
+  }
+  .pc-rec-emoji { font-size: 30px; flex-shrink: 0; }
+  .pc-rec-text { font-size: 16px; color: var(--gray-700); line-height: 1.7; font-weight: 500; word-break: keep-all; }
+
+  /* ── 레퍼런스 ── */
+  .pc-ref-section {
+    background: var(--white);
+    padding: 120px 0;
+    text-align: center;
+  }
+  .pc-ref-desc {
+    font-size: 17px;
+    color: var(--gray-500);
+    line-height: 2;
+    margin-bottom: 40px;
+    word-break: keep-all;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ── CTA ── */
+  .pc-cta-section {
+    background: var(--dark2);
+    padding: 200px 0;
+    text-align: center;
+  }
+  .pc-cta-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .pc-cta-h2 {
+    font-size: clamp(32px, 4.5vw, 52px);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.35;
+    margin-bottom: 16px;
+    word-break: keep-all;
+  }
+  .pc-cta-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 40px;
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+  .pc-cta-phones {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .pc-cta-phone { font-size: 14px; color: rgba(255,255,255,0.5); }
+  .pc-cta-phone a { color: var(--gold); font-weight: 700; text-decoration: none; }
+
+  /* ── 반응형 ── */
+  @media (max-width: 1024px) {
+    .pc-reason-grid { grid-template-columns: 1fr; }
+    .pc-steps { grid-template-columns: repeat(2, 1fr); }
+    .pc-steps::before { display: none; }
+    .pc-step { margin-bottom: 48px; }
+    .pc-el-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .sr-left, .sr-right { transform: translateY(40px); }
+    .sr-left.in, .sr-right.in { transform: translateY(0); }
+
+    .pc-inner { padding: 0 20px; }
+    .pc-back-bar { padding: 10px 20px; }
+    .pc-intro-inner { padding: 0 24px; }
+
+    .pc-h2, .pc-desc, .pc-about-heading, .pc-about-body, .pc-about-accent,
+    .pc-reason-title, .pc-reason-desc, .pc-step-title, .pc-step-desc,
+    .pc-el-name, .pc-rec-text, .pc-cta-h2, .pc-cta-sub, .pc-ref-desc { word-break: keep-all; }
+
+    .pc-label { display: block; text-align: center; }
+    .pc-h2 { text-align: center; font-size: clamp(26px, 7.5vw, 40px); }
+
+    .pc-about-section { padding: 88px 0; }
+    .pc-about-block { text-align: center; }
+    .pc-about-heading { font-size: clamp(26px, 7.5vw, 38px); margin-bottom: 24px; }
+    .pc-about-accent { text-align: center; border-left: none; border-top: 4px solid var(--green); border-radius: 0 0 12px 12px; }
+
+    .pc-reasons-section { padding: 88px 0; }
+    .pc-reasons-header { margin-bottom: 48px; }
+    .pc-reason-grid { grid-template-columns: 1fr; gap: 16px; }
+    .pc-reason-item { padding: 36px 28px; }
+    .pc-reason-num { font-size: 48px; }
+    .pc-reason-title { font-size: 18px; }
+
+    .pc-process-section { padding: 88px 0; }
+    .pc-process-header { margin-bottom: 48px; }
+    .pc-steps { grid-template-columns: 1fr; }
+    .pc-steps::before { display: none; }
+    .pc-step { margin-bottom: 40px; }
+
+    .pc-elements-section { padding: 88px 0; }
+    .pc-elements-header { margin-bottom: 44px; }
+    .pc-el-grid { grid-template-columns: 1fr; gap: 12px; }
+    .pc-el-item { padding: 32px 24px; }
+
+    .pc-rec-section { padding: 88px 0; }
+    .pc-rec-header { margin-bottom: 40px; }
+    .pc-rec-grid { grid-template-columns: 1fr; gap: 12px; }
+    .pc-rec-item { padding: 22px 22px; }
+
+    .pc-ref-section { padding: 72px 0; }
+    .pc-cta-section { padding: 100px 0; }
+  }
+  </style>
+</head>
+<body class="pc-page">
+
+  <!-- ── 헤더 ── -->
   <header class="header" id="header">
     <div class="header-inner">
       <a href="index.html" class="logo">
@@ -30,138 +595,235 @@
     </div>
   </header>
 
-  <main class="detail-main">
-    <div class="inner-page dp-wrap">
+  <!-- 뒤로가기 바 -->
+  <div class="pc-back-bar">
+    <a href="index.html#services" class="pc-back-link">← 상품소개로 돌아가기</a>
+  </div>
 
-      <a href="index.html#services" class="dp-back">← 상품소개로 돌아가기</a>
+  <main style="margin-top: calc(var(--header-h) + 42px);">
 
-      <!-- 상품명 / 핵심 카피 -->
-      <div class="dp-hero">
-        <p class="page-label">PLACE RANKING</p>
-        <h2>플레이스 상위노출</h2>
-        <p class="dp-copy">노출되지 않으면 받지 않습니다.<br>타깃 순위 안착으로 매출을 극대화하는 마케팅</p>
+    <!-- ══════════════════════════
+         0. 후킹 인트로
+    ══════════════════════════ -->
+    <section class="pc-intro">
+      <div class="pc-intro-inner">
+        <span class="pc-intro-tag">플레이스 상위노출</span>
+        <p class="pc-intro-pre">네이버 플레이스 1페이지,</p>
+        <h1 class="pc-intro-h1">노출이 곧<br><em>매출입니다</em></h1>
+        <p class="pc-intro-q">고객은 1페이지 안에서 매장을 선택합니다.</p>
       </div>
+      <div class="pc-intro-scroll">
+        <span>scroll</span>
+        <div class="pc-scroll-line"></div>
+      </div>
+    </section>
 
-      <!-- 자세한 설명 -->
-      <div class="dp-section">
-        <h3>서비스 소개</h3>
-        <p class="dp-text">원하는 핵심 키워드로 네이버 플레이스 최상단 영역 노출을 책임집니다. 시시각각 변하는 플레이스 알고리즘과 롤링 시스템 속에서도 유효한 실유저 기반 유입을 통해 안정적인 순위를 확보합니다. 약속한 노출 기준 미달 시 일할계산 환불 또는 기간 연장을 보장하여 대표님의 리스크를 최소화합니다.</p>
-        <div class="dp-highlights">
-          <div class="dp-hl-card">
-            <h4>왜 플레이스 1페이지 노출인가</h4>
-            <ul>
-              <li>네이버 검색 사용자 대부분이 1페이지 안에서 방문할 매장을 선택합니다</li>
-              <li>1페이지 노출 매장은 하위 페이지보다 훨씬 많은 클릭과 문의를 받습니다</li>
-              <li>단순한 순위 경쟁이 아닌, 실제 방문과 매출로 직결되는 핵심 유입 통로입니다</li>
-            </ul>
-          </div>
-          <div class="dp-hl-card">
-            <h4>안전한 노출 전략</h4>
-            <ul>
-              <li>무리한 리뷰 생성·대량 체험단·인위적 작업은 오히려 역효과를 냅니다</li>
-              <li>조작이 아닌 자연 노출 중심의 안정적 관리 전략으로 진행합니다</li>
-              <li>실유저 기반 유입으로 알고리즘 변화 속에서도 안정적인 순위를 확보합니다</li>
-            </ul>
-          </div>
-          <div class="dp-hl-card dp-hl-accent">
-            <h4>리스크 최소화 — 핵심 차별점</h4>
-            <ul>
-              <li>약속한 노출 기준 미달 시 일할계산 환불 또는 기간 연장을 보장합니다</li>
-            </ul>
+    <!-- ══════════════════════════
+         1. 서비스 소개
+    ══════════════════════════ -->
+    <section class="pc-about-section">
+      <div class="pc-inner">
+        <div class="pc-about-block">
+          <span class="pc-label sr" style="text-align:center; display:block; margin-bottom:20px;">ABOUT</span>
+          <h2 class="pc-about-heading sr sr-d1">원하는 핵심 키워드로<br><em>플레이스 최상단</em>을 확보합니다</h2>
+          <p class="pc-about-body sr sr-d2">
+            원하는 핵심 키워드로 네이버 플레이스 최상단 영역 노출을 책임집니다.<br>
+            시시각각 변하는 플레이스 알고리즘과 롤링 시스템 속에서도<br>
+            유효한 <strong>실유저 기반 유입</strong>을 통해 안정적인 순위를 확보합니다.
+          </p>
+          <div class="pc-about-accent sr sr-d3">
+            약속한 노출 기준 미달 시 일할계산 환불 또는 기간 연장을 보장합니다.<br>
+            <em>대표님의 리스크를 최소화하는 것이 저희의 핵심 차별점입니다.</em>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- 이런 매장에 추천 -->
-      <div class="dp-section">
-        <h3>이런 매장에 추천</h3>
-        <div class="dp-recommend">
-          <div class="rec-item"><span>🏪</span><p>신규 오픈 후 빠르게 노출을 확보하고 싶은 매장</p></div>
-          <div class="rec-item"><span>🔑</span><p>경쟁이 치열한 키워드에서 상위권을 원하는 업체</p></div>
-          <div class="rec-item"><span>📈</span><p>플레이스 유입을 통해 매출 증가를 목표로 하는 업체</p></div>
-          <div class="rec-item"><span>🛡️</span><p>리스크 없이 효과를 먼저 확인하고 싶은 대표님</p></div>
+    <!-- ══════════════════════════
+         2. 왜 플레이스 1페이지인가
+    ══════════════════════════ -->
+    <section class="pc-reasons-section">
+      <div class="pc-inner">
+        <div class="pc-reasons-header">
+          <span class="pc-label pc-label-white sr" style="display:block; text-align:center;">WHY IT MATTERS</span>
+          <h2 class="pc-h2 pc-h2-white sr sr-d1" style="text-align:center;">왜 플레이스<br>1페이지 노출인가</h2>
         </div>
-      </div>
-
-      <!-- 진행 방식 -->
-      <div class="dp-section">
-        <h3>진행 방식</h3>
-        <div class="dp-steps">
-          <div class="dp-step">
-            <div class="dps-num">01</div>
-            <h4>무료 상담</h4>
-            <p>업종·키워드·목표 순위 등 기본 정보를 확인하고 전략 방향을 논의합니다.</p>
+        <div class="pc-reason-grid">
+          <div class="pc-reason-item sr-left">
+            <span class="pc-reason-num">01</span>
+            <p class="pc-reason-title">고객은 1페이지 안에서 매장을 선택합니다</p>
+            <p class="pc-reason-desc">네이버 검색 사용자 대부분이 1페이지 안에서 방문할 매장을 선택합니다.</p>
           </div>
-          <div class="dps-arrow">→</div>
-          <div class="dp-step">
-            <div class="dps-num">02</div>
-            <h4>키워드 분석</h4>
-            <p>타깃 키워드 난이도와 경쟁 현황을 분석하여 최적의 작업 계획을 수립합니다.</p>
+          <div class="pc-reason-item sr-right">
+            <span class="pc-reason-num">02</span>
+            <p class="pc-reason-title">1페이지 노출은 클릭과 문의를 폭발적으로 늘립니다</p>
+            <p class="pc-reason-desc">1페이지 노출 매장은 하위 페이지보다 훨씬 많은 클릭과 문의를 받습니다.</p>
           </div>
-          <div class="dps-arrow">→</div>
-          <div class="dp-step">
-            <div class="dps-num">03</div>
-            <h4>작업 진행</h4>
-            <p>실유저 기반 유입으로 알고리즘에 맞춰 안정적으로 순위를 끌어올립니다.</p>
+          <div class="pc-reason-item sr-left">
+            <span class="pc-reason-num">03</span>
+            <p class="pc-reason-title">단순 순위 경쟁이 아닌 실제 매출로 직결됩니다</p>
+            <p class="pc-reason-desc">단순한 순위 경쟁이 아닌, 실제 방문과 매출로 직결되는 핵심 유입 통로입니다.</p>
           </div>
-          <div class="dps-arrow">→</div>
-          <div class="dp-step">
-            <div class="dps-num">04</div>
-            <h4>순위 보장</h4>
-            <p>목표 순위 달성 후 유지 관리를 진행하며, 미달 시 환불 또는 기간 연장을 보장합니다.</p>
+          <div class="pc-reason-item sr-right">
+            <span class="pc-reason-num">04</span>
+            <p class="pc-reason-title">알고리즘 변화에도 흔들리지 않는 안전한 전략</p>
+            <p class="pc-reason-desc">조작이 아닌 자연 노출 중심의 안정적 관리 전략으로, 실유저 기반 유입을 통해 순위를 확보합니다.</p>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- 상품 구성 -->
-      <div class="dp-section">
-        <h3>상품 구성</h3>
-        <div class="dp-elements">
-          <div class="dp-el-item">
-            <div class="dp-el-icon">🔍</div>
-            <p class="dp-el-name">핵심 키워드 분석 및 선정</p>
-            <p class="dp-el-caption">KEYWORD ANALYSIS</p>
+    <!-- ══════════════════════════
+         3. 진행 절차
+    ══════════════════════════ -->
+    <section class="pc-process-section">
+      <div class="pc-inner">
+        <div class="pc-process-header">
+          <span class="pc-label sr" style="display:block; text-align:center;">PROCESS</span>
+          <h2 class="pc-h2 sr sr-d1" style="text-align:center;">진행 절차</h2>
+          <p class="pc-desc sr sr-d2" style="text-align:center; margin: 0 auto; max-width:600px;">
+            상담부터 순위 보장까지 — 네 단계로 체계적으로 진행합니다.
+          </p>
+        </div>
+        <div class="pc-steps">
+          <div class="pc-step sr">
+            <div class="pc-step-num">01</div>
+            <p class="pc-step-label">FREE CONSULTING</p>
+            <p class="pc-step-title">무료 상담</p>
+            <p class="pc-step-desc">업종·키워드·목표 순위 등 기본 정보를 확인하고 전략 방향을 논의합니다.</p>
           </div>
-          <div class="dp-el-item">
-            <div class="dp-el-icon">👥</div>
-            <p class="dp-el-name">실유저 기반 유입 작업</p>
-            <p class="dp-el-caption">REAL USER TRAFFIC</p>
+          <div class="pc-step sr sr-d1">
+            <div class="pc-step-num">02</div>
+            <p class="pc-step-label">KEYWORD ANALYSIS</p>
+            <p class="pc-step-title">키워드 분석</p>
+            <p class="pc-step-desc">타깃 키워드 난이도와 경쟁 현황을 분석하여 최적의 작업 계획을 수립합니다.</p>
           </div>
-          <div class="dp-el-item">
-            <div class="dp-el-icon">⚙️</div>
-            <p class="dp-el-name">알고리즘 대응 맞춤 전략</p>
-            <p class="dp-el-caption">ALGORITHM STRATEGY</p>
+          <div class="pc-step sr sr-d2">
+            <div class="pc-step-num">03</div>
+            <p class="pc-step-label">RANKING WORK</p>
+            <p class="pc-step-title">작업 진행</p>
+            <p class="pc-step-desc">실유저 기반 유입으로 알고리즘에 맞춰 안정적으로 순위를 끌어올립니다.</p>
           </div>
-          <div class="dp-el-item">
-            <div class="dp-el-icon">📊</div>
-            <p class="dp-el-name">순위 변동 모니터링 리포트</p>
-            <p class="dp-el-caption">RANKING REPORT</p>
-          </div>
-          <div class="dp-el-item">
-            <div class="dp-el-icon">🛡️</div>
-            <p class="dp-el-name">미달 시 환불 · 기간 연장 보장</p>
-            <p class="dp-el-caption">SATISFACTION GUARANTEE</p>
+          <div class="pc-step sr sr-d3">
+            <div class="pc-step-num">04</div>
+            <p class="pc-step-label">RANK GUARANTEE</p>
+            <p class="pc-step-title">순위 보장</p>
+            <p class="pc-step-desc">목표 순위 달성 후 유지 관리를 진행하며, 미달 시 환불 또는 기간 연장을 보장합니다.</p>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- 레퍼런스 -->
-      <div class="dp-section" id="ref-section">
-        <h3>레퍼런스</h3>
-        <p class="dp-text">맛집·병의원·일반 업종 등 다양한 플레이스 상위노출 성공 사례를 확인하세요.</p>
-        <a href="index.html#reference" class="btn btn-outline dp-ref-btn">레퍼런스 보러가기 →</a>
+    <!-- ══════════════════════════
+         4. 상품 구성
+    ══════════════════════════ -->
+    <section class="pc-elements-section">
+      <div class="pc-inner">
+        <div class="pc-elements-header">
+          <span class="pc-label sr" style="display:block; text-align:center; margin-bottom:16px;">PRODUCT ELEMENTS</span>
+          <h2 class="pc-h2 sr sr-d1" style="text-align:center;">상품 구성</h2>
+          <p class="pc-desc sr sr-d2" style="margin: 0 auto; text-align:center; max-width:600px;">
+            안전하고 효과적인 플레이스 상위노출의 모든 것
+          </p>
+        </div>
+        <div class="pc-el-grid">
+          <div class="pc-el-item sr-scale">
+            <div class="pc-el-icon">🔍</div>
+            <p class="pc-el-name">핵심 키워드 분석 및 선정</p>
+            <p class="pc-el-caption">KEYWORD ANALYSIS</p>
+          </div>
+          <div class="pc-el-item sr-scale sr-d1">
+            <div class="pc-el-icon">👥</div>
+            <p class="pc-el-name">실유저 기반 유입 작업</p>
+            <p class="pc-el-caption">REAL USER TRAFFIC</p>
+          </div>
+          <div class="pc-el-item sr-scale sr-d2">
+            <div class="pc-el-icon">⚙️</div>
+            <p class="pc-el-name">알고리즘 대응 맞춤 전략</p>
+            <p class="pc-el-caption">ALGORITHM STRATEGY</p>
+          </div>
+          <div class="pc-el-item sr-scale sr-d3">
+            <div class="pc-el-icon">📊</div>
+            <p class="pc-el-name">순위 변동 모니터링 리포트</p>
+            <p class="pc-el-caption">RANKING REPORT</p>
+          </div>
+          <div class="pc-el-item sr-scale sr-d4">
+            <div class="pc-el-icon">🛡️</div>
+            <p class="pc-el-name">미달 시 환불 · 기간 연장 보장</p>
+            <p class="pc-el-caption">SATISFACTION GUARANTEE</p>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <!-- 상담 문의 CTA -->
-      <div class="dp-cta">
-        <h3>지금 바로 시작해보세요</h3>
-        <p>전담 매니저가 맞춤 전략을 제안해드립니다</p>
-        <a href="tel:1661-8057" class="btn btn-primary btn-lg">무료 상담 신청하기</a>
+    <!-- ══════════════════════════
+         5. 이런 매장에 추천
+    ══════════════════════════ -->
+    <section class="pc-rec-section">
+      <div class="pc-inner">
+        <div class="pc-rec-header">
+          <span class="pc-label sr" style="display:block; text-align:center;">RECOMMENDED FOR</span>
+          <h2 class="pc-h2 sr sr-d1" style="text-align:center;">이런 매장에 추천합니다</h2>
+        </div>
+        <div class="pc-rec-grid">
+          <div class="pc-rec-item sr-scale">
+            <span class="pc-rec-emoji">🏪</span>
+            <p class="pc-rec-text">신규 오픈 후 빠르게 노출을 확보하고 싶은 매장</p>
+          </div>
+          <div class="pc-rec-item sr-scale sr-d1">
+            <span class="pc-rec-emoji">🔑</span>
+            <p class="pc-rec-text">경쟁이 치열한 키워드에서 상위권을 원하는 업체</p>
+          </div>
+          <div class="pc-rec-item sr-scale sr-d2">
+            <span class="pc-rec-emoji">📈</span>
+            <p class="pc-rec-text">플레이스 유입을 통해 매출 증가를 목표로 하는 업체</p>
+          </div>
+          <div class="pc-rec-item sr-scale sr-d3">
+            <span class="pc-rec-emoji">🛡️</span>
+            <p class="pc-rec-text">리스크 없이 효과를 먼저 확인하고 싶은 대표님</p>
+          </div>
+        </div>
       </div>
+    </section>
 
-    </div>
+    <!-- ══════════════════════════
+         6. 레퍼런스
+    ══════════════════════════ -->
+    <section class="pc-ref-section" id="ref-section">
+      <div class="pc-inner">
+        <span class="pc-label sr" style="text-align:center; display:block; margin-bottom:16px;">REFERENCE</span>
+        <h2 class="pc-h2 sr sr-d1" style="text-align:center; margin-bottom:24px;">레퍼런스</h2>
+        <p class="pc-ref-desc sr sr-d2">맛집·병의원·일반 업종 등 다양한 플레이스 상위노출 성공 사례를 확인하세요.</p>
+        <div class="sr-scale sr-d3" style="text-align:center;">
+          <a href="index.html#reference" class="btn btn-outline">레퍼런스 보러가기 →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════
+         7. 상담 문의 CTA
+    ══════════════════════════ -->
+    <section class="pc-cta-section">
+      <div class="pc-inner">
+        <span class="pc-cta-label sr">CONTACT US</span>
+        <h2 class="pc-cta-h2 sr-scale sr-d1">지금 바로 시작해보세요</h2>
+        <p class="pc-cta-sub sr sr-d2">
+          전담 매니저가 맞춤 전략을 제안해드립니다.<br>
+          무료 상담 후 진행 여부를 결정하실 수 있습니다.
+        </p>
+        <div class="sr-scale sr-d3">
+          <a href="tel:01094575493" class="btn btn-primary btn-lg">무료 상담 신청하기</a>
+        </div>
+        <div class="pc-cta-phones sr sr-d4">
+          <span class="pc-cta-phone">📞 <a href="tel:01094575493">010-9457-5493</a></span>
+          <span class="pc-cta-phone">📞 <a href="tel:01023973461">010-2397-3461</a></span>
+        </div>
+      </div>
+    </section>
+
   </main>
 
+  <!-- ── 푸터 ── -->
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
@@ -198,21 +860,32 @@
   </footer>
 
   <div class="floating-btns">
-    <a href="tel:1661-8057" class="floating-btn phone-btn">📞</a>
+    <a href="tel:01094575493" class="floating-btn phone-btn">📞</a>
     <a href="index.html" class="floating-btn consult-btn">✉️</a>
   </div>
 
   <script>
-    /* 뒤로가기로 index.html 진입 시 상품소개 섹션 복원 */
     sessionStorage.setItem('prevPage', 'services');
 
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
       header.classList.toggle('scrolled', window.scrollY > 10);
     });
+
     document.getElementById('hamburger').addEventListener('click', () => {
       document.getElementById('navMenu').classList.toggle('open');
     });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.sr, .sr-left, .sr-right, .sr-scale').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
