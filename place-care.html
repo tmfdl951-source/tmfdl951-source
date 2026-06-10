@@ -793,11 +793,11 @@
     .pc-label { display: block; text-align: center; }
     .pc-h2 { text-align: center; font-size: clamp(24px, 7vw, 40px); }
     .pc-desc {
-      text-align: center;
+      text-align: left;
       max-width: 100%;
-      margin-left: auto;
-      margin-right: auto;
     }
+    /* 카드·섹션 헤더 안의 짧은 설명은 가운데 유지 */
+    .pc-cards-header .pc-desc { text-align: center; }
 
     /* 히어로 */
     .pc-hero { min-height: auto; }
