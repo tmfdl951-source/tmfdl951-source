@@ -569,7 +569,13 @@
 
     .pc-inner { padding: 0 20px; }
     .pc-back-bar { padding: 10px 20px; }
-    .pc-intro-inner { padding: 0 24px; }
+
+    /* 인트로: 뷰포트 꽉 채우기 (헤더+뒤로가기바 제외) */
+    .pc-intro { height: calc(100dvh - var(--header-h) - 42px); min-height: 480px; }
+    .pc-intro-inner { padding: 0 20px; }
+    .pc-intro-h1  { font-size: clamp(58px, 15vw, 72px); word-break: keep-all; }
+    .pc-intro-pre { font-size: clamp(20px, 5.5vw, 30px); word-break: keep-all; }
+    .pc-intro-q   { font-size: clamp(15px, 4vw, 22px); word-break: keep-all; }
 
     /* 단어 잘림 방지 */
     .pc-h2, .pc-desc, .pc-about-heading, .pc-about-body, .pc-about-accent,

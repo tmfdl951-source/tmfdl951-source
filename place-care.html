@@ -769,15 +769,12 @@
     .pc-section { padding: 88px 0; }
     .pc-inner { padding: 0 20px; }
     .pc-back-bar { padding: 10px 20px; }
-    .pc-intro-inner { padding: 0 24px; }
-
-    /* 모바일 인트로 h1 — 화면 내 1줄씩 깔끔하게 */
-    .pc-intro-h1 {
-      font-size: clamp(36px, 9.5vw, 52px);
-      word-break: keep-all;
-    }
-    .pc-intro-pre { font-size: clamp(16px, 5vw, 28px); word-break: keep-all; }
-    .pc-intro-q   { font-size: clamp(13px, 3.5vw, 18px); word-break: keep-all; }
+    /* 인트로: 뷰포트 꽉 채우기 (헤더+뒤로가기바 제외) */
+    .pc-intro { height: calc(100dvh - var(--header-h) - 42px); min-height: 480px; }
+    .pc-intro-inner { padding: 0 20px; }
+    .pc-intro-h1  { font-size: clamp(58px, 15vw, 72px); word-break: keep-all; }
+    .pc-intro-pre { font-size: clamp(20px, 5.5vw, 30px); word-break: keep-all; }
+    .pc-intro-q   { font-size: clamp(15px, 4vw, 22px); word-break: keep-all; }
 
     /* 모바일 히어로 h1 */
     .pc-hero-h1 {
