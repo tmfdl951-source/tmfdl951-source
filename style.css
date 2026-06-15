@@ -154,7 +154,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
    회사소개
 ═══════════════════════════════════════ */
 #page-about { background: var(--white); }
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: stretch; }
 .about-map-col { border-radius: var(--r); overflow: hidden; min-height: 420px; }
 .about-lead { font-size: 17px; color: var(--gray-700); line-height: 1.9; margin-bottom: 28px; }
 .about-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px; }
@@ -973,6 +973,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .hamburger { display: flex; }
   .inner-page { padding: 48px 20px 72px; }
   .about-grid, .contact-wrap { grid-template-columns: 1fr; gap: 32px; }
+  .about-map-col { min-height: 300px; }
   .services-grid { grid-template-columns: 1fr 1fr; }
   .lineup-grid { grid-template-columns: 1fr; }
   .lineup-notice { flex-direction: column; text-align: center; padding: 28px 24px; }
