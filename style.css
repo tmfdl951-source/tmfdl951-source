@@ -154,7 +154,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
    회사소개
 ═══════════════════════════════════════ */
 #page-about { background: var(--white); }
-.about-grid { display: grid; grid-template-columns: 1fr; gap: 72px; align-items: start; max-width: 720px; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+.about-map-col { border-radius: var(--r); overflow: hidden; min-height: 420px; }
 .about-lead { font-size: 17px; color: var(--gray-700); line-height: 1.9; margin-bottom: 28px; }
 .about-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px; }
 .about-list li { font-size: 15px; color: var(--gray-700); padding-left: 22px; position: relative; }
