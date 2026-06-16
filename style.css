@@ -629,6 +629,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .pcard-num { font-size: 12px; font-weight: 700; color: var(--gray-200); letter-spacing: 2px; }
 .pcard-icon { font-size: 36px; line-height: 1; }
+.card-icon { width: 44px; height: 44px; object-fit: contain; display: block; }
 
 .pcard-name {
   font-size: 20px;
